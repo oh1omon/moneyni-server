@@ -8,11 +8,11 @@ export interface IUser {
     spendings: [] | string[];
 }
 
-// export interface IDayDocument extends IDay, Document {}
 export type IUserDocument = IUser & Document;
 
 export interface IDayModel extends Model<IUserDocument> {}
 
+//Interface for data coming from client side
 export interface IUserInput {
     email?: IUser['email'];
     password?: IUser['password'];

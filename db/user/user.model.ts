@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
 import { UserSchema } from './user.schema';
-import { IUserDocument } from './user.types';
+import { IDayModel, IUserDocument } from './user.types';
 
-export const UserModel = model<IUserDocument>('User', UserSchema);
+export const UserModel: IDayModel = model<IUserDocument>('User', UserSchema);
