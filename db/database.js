@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewUser = exports.connect = void 0;
+exports.getUserById = exports.getUserByEmail = exports.createNewUser = exports.connect = exports.database = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_model_1 = require("./user/user.model");
-let database;
 const connect = () => {
     const uri = process.env.DB_CONNECT_LINK;
-    if (database) {
+    if (exports.database) {
         return;
     }
     mongoose_1.default.connect(uri, {
@@ -18,15 +18,19 @@ const connect = () => {
         useUnifiedTopology: true,
         useCreateIndex: true,
     });
-    database = mongoose_1.default.connection;
-    database.once('open', async () => {
+    exports.database = mongoose_1.default.connection;
+    exports.database.once('open', async () => {
         console.log('Connected to database');
     });
-    database.on('error', () => {
+    exports.database.on('error', () => {
         console.log('Error connecting to database');
     });
 };
 exports.connect = connect;
+/**
+ * @param {IUserInput} newUser object, containing fields of email, password, name
+ * @return either error message or new User Object
+ * */
 const createNewUser = async (newUser) => {
     return new Promise(async (resolve, reject) => {
         //Checking if all data is presented to registration
@@ -40,11 +44,13 @@ const createNewUser = async (newUser) => {
             reject('There are an account with such email already');
             return;
         }
+        //Hashing password
+        const hashedPassword = await bcrypt_1.default.hash(newUser.password, 10);
         //Create new USer
         const injectedUser = await user_model_1.UserModel.create({
             _id: new mongoose_1.default.Types.ObjectId(),
             email: newUser.email,
-            password: newUser.password,
+            password: hashedPassword,
             name: newUser.name,
             spendings: [],
         });
@@ -55,6 +61,42 @@ const createNewUser = async (newUser) => {
     });
 };
 exports.createNewUser = createNewUser;
+const getUserByEmail = async (email) => {
+    return new Promise(async (resolve, reject) => {
+        if (!email) {
+            reject('No email provided');
+            return;
+        }
+        user_model_1.UserModel.findOne({ email }, (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            else {
+                resolve(data);
+            }
+        });
+    });
+};
+exports.getUserByEmail = getUserByEmail;
+const getUserById = async (id) => {
+    return new Promise(async (resolve, reject) => {
+        if (!id) {
+            reject('No id provided');
+            return;
+        }
+        user_model_1.UserModel.findOne({ _id: id }, (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            else {
+                resolve(data);
+            }
+        });
+    });
+};
+exports.getUserById = getUserById;
 // export const disconnect = () => {
 //     if (!database) {
 //         return;
