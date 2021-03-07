@@ -27,6 +27,6 @@ exports.UserSchema = new mongoose_1.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    spendings: [String],
+    spendings: [mongoose.Schema.Types.ObjectId],
 });
 //# sourceMappingURL=user.schema.js.map

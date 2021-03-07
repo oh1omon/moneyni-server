@@ -10,6 +10,11 @@ import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import signIn from './routes/signIn';
 import flash from 'express-flash';
 import path from 'path';
+import signOut from './routes/signOut';
+import addSpend from './routes/addSpend';
+import getSpends from './routes/getSpends';
+import authConfirm from './routes/authConfirm';
+import addSpendToUser from './routes/addSpendToUser';
 const MongoDBStore = connectMongoDBSession(session);
 
 //Extracting PORT & HOST variables from .env file
@@ -50,24 +55,23 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Routes
-// app.get('/', (req: any, res: Response) => {
-//     // res.send('fqefqqwrwqrwfr');
-//     res.json({ user: req.user });
-// });
 
-//Only for testing
+// Only for testing
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
-app.get('/test', (req, res) => {
-    res.json({
-        user: req.user,
-    });
-});
-//This was only for testing
+
+//Auth Handlers
 app.use('/api/signup', signUp);
 app.use('/api/signin', signIn);
+app.use('/api/signout', signOut);
+app.use('/api/authConfirm', authConfirm);
+
+//Adding, Getting Spends
+app.use('/api/addspend', addSpend);
+app.use('/api/getspends', getSpends);
+app.use('/api/addspendtouser', addSpendToUser);
 
 //Starting server
 app.listen(PORT, HOST, () => {

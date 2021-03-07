@@ -1,7 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { IUser, IUserDocument, IUserInput } from './user/user.types';
+import { IUserDocument, IUserInput } from './user/user.types';
 import { UserModel } from './user/user.model';
+import { ISpendDocument, ISpendInput } from './spends/spend.types';
+import { SpendModel } from './spends/spend.model';
 
 export let database: mongoose.Connection;
 
@@ -109,9 +111,58 @@ export const getUserById = async (
         );
     });
 };
-// export const disconnect = () => {
-//     if (!database) {
-//         return;
-//     }
-//     mongoose.disconnect();
-// };
+
+//Spend Operations
+
+export const getSpendsById = async (
+    idArr: Types.ObjectId[]
+): Promise<ISpendDocument | ISpendDocument[] | string> => {
+    return new Promise((resolve, reject) => {
+        //Finding all spends by idArr
+        SpendModel.find(
+            {
+                _id: { $in: idArr },
+            },
+            function (err, spends: ISpendDocument[]) {
+                if (err) {
+                    reject('Something wrong');
+                    return;
+                }
+                resolve(spends);
+            }
+        );
+    });
+};
+
+export const addNewSpend = async (
+    newSpend: ISpendInput
+): Promise<ISpendDocument | string> => {
+    return new Promise(async (resolve, reject) => {
+        //Trying to insert new Spend
+        const addedSpend = SpendModel.create({
+            _id: new mongoose.Types.ObjectId(),
+            category: newSpend.category,
+            comment: newSpend.comment,
+            cost: newSpend.cost,
+            currency: newSpend.currency,
+        });
+        //Working with the result
+        addedSpend ? resolve(addedSpend) : reject('Something went wrong');
+    });
+};
+
+export const addNewSpendToUser = async (
+    userId: Types.ObjectId,
+    newSpend: Types.ObjectId
+): Promise<IUserDocument | string> => {
+    return new Promise(async (resolve, reject) => {
+        const updatedUser = await UserModel.findOneAndUpdate(
+            { userId },
+            { $push: { spendings: newSpend } },
+            {
+                new: true,
+            }
+        );
+        updatedUser ? resolve(updatedUser) : reject('Something went wrongi');
+    });
+};

@@ -1,0 +1,1 @@
+{"version":3,"file":"signInValidator.js","sourceRoot":"","sources":["signInValidator.ts"],"names":[],"mappings":";;;AAOO,MAAM,eAAe,GAAqB,CAC7C,UAA2B,EAC7B,EAAE;IACA,OAAO,CACH,CAAC,UAAU,CAAC,KAAK;QACjB,CAAC,UAAU,CAAC,QAAQ;QACpB,CAAC,mBAAmB,CAAC,IAAI,CAAC,UAAU,CAAC,KAAK,CAAC,CAC9C,CAAC;AACN,CAAC,CAAC;AARW,QAAA,eAAe,mBAQ1B"}

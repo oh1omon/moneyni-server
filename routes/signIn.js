@@ -7,10 +7,14 @@ const express_1 = __importDefault(require("express"));
 const passport_config_1 = require("../passport/passport.config");
 const passport_1 = __importDefault(require("passport"));
 const database_1 = require("../db/database");
+const signInValidator_1 = require("../validators/signInValidator");
 const router = express_1.default.Router();
 passport_config_1.initializePassport(passport_1.default, database_1.getUserByEmail, database_1.getUserById);
 //Sign In Route
 router.post('/', (req, res) => {
+    const valRes = signInValidator_1.signInValidator(req.body);
+    if (valRes)
+        return res.json({ message: 'wrong data submitted' });
     passport_1.default.authenticate('local', function (err, user, info) {
         if (err) {
             return res.json({ message: err.message });
@@ -33,15 +37,6 @@ router.post('/', (req, res) => {
             });
         });
     })(req, res);
-}
-// passport.authenticate('local', {
-//     successMessage: true,
-//     failureMessage: true,
-//     failureFlash: true,
-// }),
-// function (req: any, res: Response) {
-//     res.json({ email: req.user.email });
-// }
-);
+});
 exports.default = router;
 //# sourceMappingURL=signIn.js.map

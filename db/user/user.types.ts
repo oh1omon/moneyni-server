@@ -5,12 +5,12 @@ export interface IUser {
     email: string;
     password: string;
     name: string;
-    spendings: [] | string[];
+    spendings: [] | Types.ObjectId[];
 }
 
 export type IUserDocument = IUser & Document;
 
-export interface IDayModel extends Model<IUserDocument> {}
+export interface IUserModel extends Model<IUserDocument> {}
 
 //Interface for data coming from client side
 export interface IUserInput {

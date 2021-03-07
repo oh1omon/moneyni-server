@@ -1,0 +1,1 @@
+{"version":3,"file":"spend.schema.js","sourceRoot":"","sources":["spend.schema.ts"],"names":[],"mappings":";;;;;;AAAA,uCAAkC;AAClC,wDAAgC;AAEnB,QAAA,WAAW,GAAW,IAAI,iBAAM,CAAC;IAC1C,GAAG,EAAE,kBAAQ,CAAC,MAAM,CAAC,KAAK,CAAC,QAAQ;IACnC,QAAQ,EAAE,MAAM;IAChB,OAAO,EAAE,MAAM;IACf,IAAI,EAAE,MAAM;IACZ,QAAQ,EAAE,MAAM;CACnB,CAAC,CAAC"}

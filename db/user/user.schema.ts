@@ -6,5 +6,5 @@ export const UserSchema: Schema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    spendings: [String],
+    spendings: [mongoose.Schema.Types.ObjectId],
 });

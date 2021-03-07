@@ -34,6 +34,11 @@ const connect_mongodb_session_1 = __importDefault(require("connect-mongodb-sessi
 const signIn_1 = __importDefault(require("./routes/signIn"));
 const express_flash_1 = __importDefault(require("express-flash"));
 const path_1 = __importDefault(require("path"));
+const signOut_1 = __importDefault(require("./routes/signOut"));
+const addSpend_1 = __importDefault(require("./routes/addSpend"));
+const getSpends_1 = __importDefault(require("./routes/getSpends"));
+const authConfirm_1 = __importDefault(require("./routes/authConfirm"));
+const addSpendToUser_1 = __importDefault(require("./routes/addSpendToUser"));
 const MongoDBStore = connect_mongodb_session_1.default(express_session_1.default);
 //Extracting PORT & HOST variables from .env file
 const PORT = parseInt(process.env.PORT, 10);
@@ -63,23 +68,20 @@ app.use(express_session_1.default({
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 //Routes
-// app.get('/', (req: any, res: Response) => {
-//     // res.send('fqefqqwrwqrwfr');
-//     res.json({ user: req.user });
-// });
-//Only for testing
+// Only for testing
 app.use(express_1.default.static(path_1.default.join(__dirname, 'build')));
 app.get('/', (req, res) => {
     res.sendFile(path_1.default.join(__dirname, 'client', 'index.html'));
 });
-app.get('/test', (req, res) => {
-    res.json({
-        user: req.user,
-    });
-});
-//This was only for testing
+//Auth Handlers
 app.use('/api/signup', signUp_1.default);
 app.use('/api/signin', signIn_1.default);
+app.use('/api/signout', signOut_1.default);
+app.use('/api/authConfirm', authConfirm_1.default);
+//Adding, Getting Spends
+app.use('/api/addspend', addSpend_1.default);
+app.use('/api/getspends', getSpends_1.default);
+app.use('/api/addspendtouser', addSpendToUser_1.default);
 //Starting server
 app.listen(PORT, HOST, () => {
     console.log(`server is listening on ${HOST}:${PORT}`);

@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.getUserByEmail = exports.createNewUser = exports.connect = exports.database = void 0;
+exports.addNewSpendToUser = exports.addNewSpend = exports.getSpendsById = exports.getUserById = exports.getUserByEmail = exports.createNewUser = exports.connect = exports.database = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_model_1 = require("./user/user.model");
+const spend_model_1 = require("./spends/spend.model");
 const connect = () => {
     const uri = process.env.DB_CONNECT_LINK;
     if (exports.database) {
@@ -97,10 +98,44 @@ const getUserById = async (id) => {
     });
 };
 exports.getUserById = getUserById;
-// export const disconnect = () => {
-//     if (!database) {
-//         return;
-//     }
-//     mongoose.disconnect();
-// };
+//Spend Operations
+const getSpendsById = async (idArr) => {
+    return new Promise((resolve, reject) => {
+        //Finding all spends by idArr
+        spend_model_1.SpendModel.find({
+            _id: { $in: idArr },
+        }, function (err, spends) {
+            if (err) {
+                reject('Something wrong');
+                return;
+            }
+            resolve(spends);
+        });
+    });
+};
+exports.getSpendsById = getSpendsById;
+const addNewSpend = async (newSpend) => {
+    return new Promise(async (resolve, reject) => {
+        //Trying to insert new Spend
+        const addedSpend = spend_model_1.SpendModel.create({
+            _id: new mongoose_1.default.Types.ObjectId(),
+            category: newSpend.category,
+            comment: newSpend.comment,
+            cost: newSpend.cost,
+            currency: newSpend.currency,
+        });
+        //Working with the result
+        addedSpend ? resolve(addedSpend) : reject('Something went wrong');
+    });
+};
+exports.addNewSpend = addNewSpend;
+const addNewSpendToUser = async (userId, newSpend) => {
+    return new Promise(async (resolve, reject) => {
+        const updatedUser = await user_model_1.UserModel.findOneAndUpdate({ userId }, { $push: { spendings: newSpend } }, {
+            new: true,
+        });
+        updatedUser ? resolve(updatedUser) : reject('Something went wrongi');
+    });
+};
+exports.addNewSpendToUser = addNewSpendToUser;
 //# sourceMappingURL=database.js.map
