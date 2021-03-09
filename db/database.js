@@ -15,7 +15,7 @@ const connect = () => {
     }
     mongoose_1.default.connect(uri, {
         useNewUrlParser: true,
-        useFindAndModify: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
         useCreateIndex: true,
     });
@@ -100,17 +100,19 @@ const getUserById = async (id) => {
 exports.getUserById = getUserById;
 //Spend Operations
 const getSpendsById = async (idArr) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         //Finding all spends by idArr
-        spend_model_1.SpendModel.find({
+        const foundDocs = await spend_model_1.SpendModel.find({
             _id: { $in: idArr },
-        }, function (err, spends) {
-            if (err) {
-                reject('Something wrong');
-                return;
-            }
-            resolve(spends);
         });
+        if (foundDocs) {
+            resolve(foundDocs);
+            return;
+        }
+        else {
+            reject('none found focs');
+            return;
+        }
     });
 };
 exports.getSpendsById = getSpendsById;
@@ -131,7 +133,7 @@ const addNewSpend = async (newSpend) => {
 exports.addNewSpend = addNewSpend;
 const addNewSpendToUser = async (userId, newSpend) => {
     return new Promise(async (resolve, reject) => {
-        const updatedUser = await user_model_1.UserModel.findOneAndUpdate({ userId }, { $push: { spendings: newSpend } }, {
+        const updatedUser = await user_model_1.UserModel.findOneAndUpdate({ _id: userId }, { $push: { spendings: newSpend } }, {
             new: true,
         });
         updatedUser ? resolve(updatedUser) : reject('Something went wrongi');

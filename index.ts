@@ -33,8 +33,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//Adding flash
-app.use(flash());
+// //Adding flash
+// app.use(flash());
 
 //Initializing Express session
 app.use(
@@ -58,21 +58,21 @@ app.use(passport.session());
 
 // Only for testing
 app.use(express.static(path.join(__dirname, 'build')));
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'index.html'));
-});
 
 //Auth Handlers
 app.use('/api/signup', signUp);
 app.use('/api/signin', signIn);
 app.use('/api/signout', signOut);
-app.use('/api/authConfirm', authConfirm);
+app.use('/api/authconfirm', authConfirm);
 
 //Adding, Getting Spends
 app.use('/api/addspend', addSpend);
 app.use('/api/getspends', getSpends);
 app.use('/api/addspendtouser', addSpendToUser);
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build/index.html'));
+});
 //Starting server
 app.listen(PORT, HOST, () => {
     console.log(`server is listening on ${HOST}:${PORT}`);

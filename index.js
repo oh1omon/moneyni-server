@@ -32,7 +32,6 @@ const passport_1 = __importDefault(require("passport"));
 const signUp_1 = __importDefault(require("./routes/signUp"));
 const connect_mongodb_session_1 = __importDefault(require("connect-mongodb-session"));
 const signIn_1 = __importDefault(require("./routes/signIn"));
-const express_flash_1 = __importDefault(require("express-flash"));
 const path_1 = __importDefault(require("path"));
 const signOut_1 = __importDefault(require("./routes/signOut"));
 const addSpend_1 = __importDefault(require("./routes/addSpend"));
@@ -51,8 +50,8 @@ app.use(cors_1.default());
 //Bodyparser Middleware
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-//Adding flash
-app.use(express_flash_1.default());
+// //Adding flash
+// app.use(flash());
 //Initializing Express session
 app.use(express_session_1.default({
     secret: process.env.SESSION_SECRET,
@@ -70,18 +69,18 @@ app.use(passport_1.default.session());
 //Routes
 // Only for testing
 app.use(express_1.default.static(path_1.default.join(__dirname, 'build')));
-app.get('/', (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, 'client', 'index.html'));
-});
 //Auth Handlers
 app.use('/api/signup', signUp_1.default);
 app.use('/api/signin', signIn_1.default);
 app.use('/api/signout', signOut_1.default);
-app.use('/api/authConfirm', authConfirm_1.default);
+app.use('/api/authconfirm', authConfirm_1.default);
 //Adding, Getting Spends
 app.use('/api/addspend', addSpend_1.default);
 app.use('/api/getspends', getSpends_1.default);
 app.use('/api/addspendtouser', addSpendToUser_1.default);
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'build/index.html'));
+});
 //Starting server
 app.listen(PORT, HOST, () => {
     console.log(`server is listening on ${HOST}:${PORT}`);

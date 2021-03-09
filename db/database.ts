@@ -16,7 +16,7 @@ export const connect = () => {
 
     mongoose.connect(uri, {
         useNewUrlParser: true,
-        useFindAndModify: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
         useCreateIndex: true,
     });
@@ -115,22 +115,20 @@ export const getUserById = async (
 //Spend Operations
 
 export const getSpendsById = async (
-    idArr: Types.ObjectId[]
+    idArr: Types.ObjectId[] | []
 ): Promise<ISpendDocument | ISpendDocument[] | string> => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         //Finding all spends by idArr
-        SpendModel.find(
-            {
-                _id: { $in: idArr },
-            },
-            function (err, spends: ISpendDocument[]) {
-                if (err) {
-                    reject('Something wrong');
-                    return;
-                }
-                resolve(spends);
-            }
-        );
+        const foundDocs = await SpendModel.find({
+            _id: { $in: idArr },
+        });
+        if (foundDocs) {
+            resolve(foundDocs);
+            return;
+        } else {
+            reject('none found focs');
+            return;
+        }
     });
 };
 
@@ -157,7 +155,7 @@ export const addNewSpendToUser = async (
 ): Promise<IUserDocument | string> => {
     return new Promise(async (resolve, reject) => {
         const updatedUser = await UserModel.findOneAndUpdate(
-            { userId },
+            { _id: userId },
             { $push: { spendings: newSpend } },
             {
                 new: true,

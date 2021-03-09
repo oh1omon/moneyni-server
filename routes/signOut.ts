@@ -9,7 +9,7 @@ router.get('/', (req: Request, res: Response) => {
         if (!err) {
             res.status(200)
                 .clearCookie('connect.sid', { path: '/' })
-                .json({ status: 'Success' });
+                .json({ user: req.user });
         } else {
             // handle error case...
             console.log(err);
