@@ -41,12 +41,12 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: false,
         store: new MongoDBStore({
             uri: process.env.DB_CONNECT_LINK,
             collection: 'mySessions',
         }),
-        cookie: { maxAge: 60 * 60 * 1000 * 24 },
+        cookie: { maxAge: 60 * 60 * 1000 * 24 * 30 },
     })
 );
 
