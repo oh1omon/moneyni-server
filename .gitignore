@@ -4,3 +4,5 @@ input.json
 queries.http
 .env
 .idea
+*.js
+*.js.map

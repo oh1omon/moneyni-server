@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
@@ -8,7 +8,6 @@ import passport from 'passport';
 import signUp from './routes/signUp';
 import { default as connectMongoDBSession } from 'connect-mongodb-session';
 import signIn from './routes/signIn';
-import flash from 'express-flash';
 import path from 'path';
 import signOut from './routes/signOut';
 import addSpend from './routes/addSpend';
