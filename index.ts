@@ -4,13 +4,7 @@ import * as dotenv from 'dotenv'
 import express from 'express'
 import session from 'express-session'
 import passport from 'passport'
-import addSpend from './controllers/addSpend'
-import addSpendToUser from './routes/addSpendToUser'
-import authConfirm from './routes/authConfirm'
-import getSpends from './routes/getSpends'
-import signIn from './routes/signIn'
-import signOut from './routes/signOut'
-import signUp from './routes/signUp'
+import routes from './routes/index'
 import { connect } from './services/database'
 dotenv.config()
 
@@ -48,17 +42,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 //Routes
-
-//Auth Handlers
-app.use('/api/signup', signUp)
-app.use('/api/signin', signIn)
-app.use('/api/signout', signOut)
-app.use('/api/authconfirm', authConfirm)
-
-//Adding, Getting Spends
-app.use('/api/addspend', addSpend)
-app.use('/api/getspends', getSpends)
-app.use('/api/addspendtouser', addSpendToUser)
+app.use('/', routes)
 
 //Starting server
 app.listen(PORT, () => {
