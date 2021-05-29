@@ -4,8 +4,12 @@ import { IRoute } from '../types'
 //Since this class is abstract we will inherit its properties to our actual classes
 export default abstract class Controller {
 	//On class initializing we define:
+
 	// public property Router taken from express
 	public router: Router = Router()
+
+	//abstract path property
+	public abstract path: string
 
 	//Base for the routes from our child classes
 	protected abstract readonly routes: IRoute[] = []
