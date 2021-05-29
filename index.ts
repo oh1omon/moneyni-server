@@ -1,7 +1,7 @@
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
-import express from 'express'
+import express, { Application } from 'express'
 import session from 'express-session'
 import passport from 'passport'
 import routes from './routes/index'
@@ -15,11 +15,10 @@ const PORT: number = parseInt(process.env.PORT as string, 10)
 connect()
 
 //Initializing Express
-const app = express()
+const app: Application = express()
 
 app.use(cors())
 
-//Bodyparser Middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 

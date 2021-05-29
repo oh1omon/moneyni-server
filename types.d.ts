@@ -1,10 +1,21 @@
 /// <reference types="node" />
-import { Request as IRequest } from 'express'
+import { Request as IRequest, Response } from 'express'
 import { Document, Types } from 'mongoose'
 
-//Request
+//Express
 interface Request extends IRequest {
 	user?: IUser
+}
+
+interface IRoute {
+	path: string
+	method: Methods
+	handler: (req: Request, res: Response) => void
+}
+
+export enum Methods {
+	GET = 'GET',
+	POST = 'POST',
 }
 
 // interfaces for User
