@@ -1,6 +1,14 @@
 import bcrypt from 'bcrypt'
-import mongoose, { Types } from 'mongoose'
-import { ISpendDocument, ISpendInput, IUserDocument, IUserInput } from '../types'
+import mongoose from 'mongoose'
+import {
+	IUserDocument,
+	TAddNewSpend,
+	TAddNewSpendToUser,
+	TCreateNewUser,
+	TGetSpendsById,
+	TGetUserByEmail,
+	TGetUserById,
+} from '../types'
 import { Spend } from './spend.schema'
 import { User } from './user.schema'
 
@@ -33,7 +41,7 @@ export const connect: () => void = () => {
  * @param {IUserInput} newUser object, containing fields of email, password, name
  * @return either error message or new User Object
  * */
-export const createNewUser = async (newUser: IUserInput): Promise<IUserDocument> => {
+export const createNewUser: TCreateNewUser = async (newUser) => {
 	return new Promise(async (resolve, reject) => {
 		//Checking if all data is presented to registration
 		if (!newUser) {
@@ -61,8 +69,8 @@ export const createNewUser = async (newUser: IUserInput): Promise<IUserDocument>
 	})
 }
 
-export const getUserByEmail = async (email: string): Promise<IUserDocument | undefined> => {
-	return new Promise(async (resolve, reject) => {
+export const getUserByEmail: TGetUserByEmail = async (email) => {
+	return new Promise((resolve, reject) => {
 		if (!email) {
 			reject('No email provided')
 			return
@@ -78,8 +86,8 @@ export const getUserByEmail = async (email: string): Promise<IUserDocument | und
 	})
 }
 
-export const getUserById = async (id: string): Promise<IUserDocument | undefined> => {
-	return new Promise(async (resolve, reject) => {
+export const getUserById: TGetUserById = async (id) => {
+	return new Promise((resolve, reject) => {
 		if (!id) {
 			reject('No id provided')
 			return
@@ -97,7 +105,7 @@ export const getUserById = async (id: string): Promise<IUserDocument | undefined
 
 //Spend Operations
 
-export const getSpendsById = async (idArr: Types.ObjectId[] | []): Promise<ISpendDocument | ISpendDocument[] | string> => {
+export const getSpendsById: TGetSpendsById = async (idArr) => {
 	return new Promise(async (resolve, reject) => {
 		//Finding all spends by idArr
 		const foundDocs = await Spend.find({
@@ -113,8 +121,8 @@ export const getSpendsById = async (idArr: Types.ObjectId[] | []): Promise<ISpen
 	})
 }
 
-export const addNewSpend = async (newSpend: ISpendInput): Promise<ISpendDocument | string> => {
-	return new Promise(async (resolve, reject) => {
+export const addNewSpend: TAddNewSpend = async (newSpend) => {
+	return new Promise((resolve, reject) => {
 		//Trying to insert new Spend
 		const addedSpend = Spend.create({
 			_id: new mongoose.Types.ObjectId(),
@@ -128,7 +136,7 @@ export const addNewSpend = async (newSpend: ISpendInput): Promise<ISpendDocument
 	})
 }
 
-export const addNewSpendToUser = async (userId: Types.ObjectId, newSpend: Types.ObjectId): Promise<IUserDocument | string> => {
+export const addNewSpendToUser: TAddNewSpendToUser = async (userId, newSpend) => {
 	return new Promise(async (resolve, reject) => {
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
