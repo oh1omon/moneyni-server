@@ -1,13 +1,12 @@
 import bcrypt from 'bcrypt'
 import mongoose, { Types } from 'mongoose'
-import { SpendModel } from './spends/spend.model'
-import { ISpendDocument, ISpendInput } from './spends/spend.types'
-import { UserModel } from './user/user.model'
-import { IUserDocument, IUserInput } from './user/user.types'
+import { ISpendDocument, ISpendInput, IUserDocument, IUserInput } from '../types'
+import { Spend } from './spend.schema'
+import { User } from './user.schema'
 
 export let database: mongoose.Connection
 
-export const connect = () => {
+export const connect: () => void = () => {
 	if (database) {
 		return
 	}
@@ -42,7 +41,7 @@ export const createNewUser = async (newUser: IUserInput): Promise<IUserDocument>
 			return
 		}
 		//Checking if there is an user with such email
-		const foundUser = await UserModel.findOne({ email: newUser.email })
+		const foundUser = await User.findOne({ email: newUser.email })
 		if (foundUser) {
 			reject('There are an account with such email already')
 			return
@@ -50,12 +49,12 @@ export const createNewUser = async (newUser: IUserInput): Promise<IUserDocument>
 		//Hashing password
 		const hashedPassword: string = await bcrypt.hash(newUser.password, 10)
 		//Create new USer
-		const injectedUser: IUserDocument = await UserModel.create({
+		const injectedUser: IUserDocument = await User.create({
 			_id: new mongoose.Types.ObjectId(),
 			email: newUser.email,
 			password: hashedPassword,
 			name: newUser.name,
-			spendings: [],
+			spends: [],
 		})
 		//Working with the result
 		injectedUser ? resolve(injectedUser) : reject('Something went wrong...')
@@ -68,7 +67,7 @@ export const getUserByEmail = async (email: string): Promise<IUserDocument | und
 			reject('No email provided')
 			return
 		}
-		UserModel.findOne({ email }, (err: Error, data: IUserDocument | null) => {
+		User.findOne({ email }, (err: Error, data: IUserDocument | null) => {
 			if (err) {
 				reject(err)
 				return
@@ -85,7 +84,7 @@ export const getUserById = async (id: string): Promise<IUserDocument | undefined
 			reject('No id provided')
 			return
 		}
-		UserModel.findOne({ _id: id }, (err: Error, data: IUserDocument | null) => {
+		User.findOne({ _id: id }, (err: Error, data: IUserDocument | null) => {
 			if (err) {
 				reject(err)
 				return
@@ -101,14 +100,14 @@ export const getUserById = async (id: string): Promise<IUserDocument | undefined
 export const getSpendsById = async (idArr: Types.ObjectId[] | []): Promise<ISpendDocument | ISpendDocument[] | string> => {
 	return new Promise(async (resolve, reject) => {
 		//Finding all spends by idArr
-		const foundDocs = await SpendModel.find({
+		const foundDocs = await Spend.find({
 			_id: { $in: idArr },
 		})
 		if (foundDocs) {
 			resolve(foundDocs)
 			return
 		} else {
-			reject('none found focs')
+			reject('No docs has been found!')
 			return
 		}
 	})
@@ -117,7 +116,7 @@ export const getSpendsById = async (idArr: Types.ObjectId[] | []): Promise<ISpen
 export const addNewSpend = async (newSpend: ISpendInput): Promise<ISpendDocument | string> => {
 	return new Promise(async (resolve, reject) => {
 		//Trying to insert new Spend
-		const addedSpend = SpendModel.create({
+		const addedSpend = Spend.create({
 			_id: new mongoose.Types.ObjectId(),
 			category: newSpend.category,
 			comment: newSpend.comment,
@@ -125,19 +124,19 @@ export const addNewSpend = async (newSpend: ISpendInput): Promise<ISpendDocument
 			currency: newSpend.currency,
 		})
 		//Working with the result
-		addedSpend ? resolve(addedSpend) : reject('Something went wrong')
+		addedSpend ? resolve(addedSpend) : reject('Something went wrong!')
 	})
 }
 
 export const addNewSpendToUser = async (userId: Types.ObjectId, newSpend: Types.ObjectId): Promise<IUserDocument | string> => {
 	return new Promise(async (resolve, reject) => {
-		const updatedUser = await UserModel.findOneAndUpdate(
+		const updatedUser = await User.findOneAndUpdate(
 			{ _id: userId },
-			{ $push: { spendings: newSpend } },
+			{ $push: { spends: newSpend } },
 			{
 				new: true,
 			}
 		)
-		updatedUser ? resolve(updatedUser) : reject('Something went wrongi')
+		updatedUser ? resolve(updatedUser) : reject('Something went wrong!')
 	})
 }
