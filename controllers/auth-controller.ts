@@ -35,6 +35,13 @@ export default class AuthController extends Controller {
 		},
 	]
 
+	/**
+	 * This method performs validation of user input and then calls user login function.
+	 * After that, this handler responses to the client part according to result of user creation function
+	 * @param req
+	 * @param res
+	 * @returns {void}
+	 */
 	handleLogin(req: Request, res: Response): void {
 		const valRes = Validator.signInValidator(req.body)
 		if (valRes) {
@@ -69,6 +76,13 @@ export default class AuthController extends Controller {
 		})(req, res)
 	}
 
+	/**
+	 * This method performs validation of user input and then calls user creation function.
+	 * After that, this handler responses to the client part according to result of user creation function
+	 * @param req
+	 * @param res
+	 * @returns {void}
+	 */
 	handleRegister(req: Request, res: Response): void {
 		const valRes = Validator.signUpValidator(req.body)
 		if (valRes) {
@@ -90,6 +104,12 @@ export default class AuthController extends Controller {
 			.catch((err) => res.json(err))
 	}
 
+	/**
+	 * This method logs out user and then deletes user side cookie
+	 * @param req
+	 * @param res
+	 * @returns {void}
+	 */
 	handleLogout(req: Request, res: Response): void {
 		req.logout()
 		req.session.destroy(function (err) {
@@ -101,6 +121,12 @@ export default class AuthController extends Controller {
 		})
 	}
 
+	/**
+	 * This method responses to the client part with user's deserialized object
+	 * @param req
+	 * @param res
+	 * @returns {void}
+	 */
 	handleRetrieve(req: Request, res: Response): void {
 		res.json({ user: req.user })
 	}
