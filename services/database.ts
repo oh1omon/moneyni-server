@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
+import { Spend } from '../models/spend.schema'
+import { User } from '../models/user.schema'
 import {
 	IUserDocument,
 	TAddNewSpend,
@@ -9,8 +11,6 @@ import {
 	TGetUserByEmail,
 	TGetUserById,
 } from '../types'
-import { Spend } from './spend.schema'
-import { User } from './user.schema'
 
 export let database: mongoose.Connection
 

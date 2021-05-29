@@ -4,14 +4,14 @@ import * as dotenv from 'dotenv'
 import express from 'express'
 import session from 'express-session'
 import passport from 'passport'
-import { connect } from './db/database'
-import addSpend from './routes/addSpend'
+import addSpend from './controllers/addSpend'
 import addSpendToUser from './routes/addSpendToUser'
 import authConfirm from './routes/authConfirm'
 import getSpends from './routes/getSpends'
 import signIn from './routes/signIn'
 import signOut from './routes/signOut'
 import signUp from './routes/signUp'
+import { connect } from './services/database'
 dotenv.config()
 
 //Extracting PORT & HOST variables from .env file
