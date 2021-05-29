@@ -4,26 +4,24 @@ import * as dotenv from 'dotenv'
 import express, { Application } from 'express'
 import session from 'express-session'
 import passport from 'passport'
-import routes from './routes/index'
-import { connect } from './services/database'
+import AuthController from './controllers/auth-controller'
+import SpendsController from './controllers/spends-controller'
+import Server from './server'
 dotenv.config()
 
-//Extracting PORT & HOST variables from .env file
-const PORT: number = parseInt(process.env.PORT as string, 10)
-
-//Connecting to MongoDB Atlas
-connect()
-
-//Initializing Express
 const app: Application = express()
 
-app.use(cors())
+// //Extracting PORT & HOST variables from .env file
+const PORT: number = parseInt(process.env.PORT as string, 10)
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+//Creating server class and passing express instance and PORT variable there
+const server = new Server(app, PORT)
 
-//Initializing Express session
-app.use(
+//Creating array of middleware that should be applied globally
+const globalMiddleware = [
+	cors(),
+	express.json(),
+	express.urlencoded({ extended: false }),
 	session({
 		secret: process.env.SESSION_SECRET,
 		resave: false,
@@ -33,17 +31,17 @@ app.use(
 			stringify: false,
 		}),
 		cookie: { maxAge: 60 * 60 * 1000 * 24 * 30 },
-	})
-)
+	}),
+	passport.initialize(),
+	passport.session(),
+]
 
-//Applying Passport middleware
-app.use(passport.initialize())
-app.use(passport.session())
+const controllers = [new AuthController(), new SpendsController()]
 
-//Routes
-app.use('/', routes)
-
-//Starting server
-app.listen(PORT, () => {
-	console.log(`server is listening on ${PORT}`)
-})
+try {
+	server.loadMiddleware(globalMiddleware)
+	server.loadControllers(controllers)
+	server.run()
+} catch (e) {
+	console.log(e)
+}
