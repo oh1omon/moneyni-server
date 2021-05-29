@@ -1,8 +1,8 @@
 import { Response } from 'express'
 import { addNewSpend, addNewSpendToUser, getSpendsById } from '../services/database'
 import Validator from '../services/validator'
-import { IRoute, Methods, Request } from '../types'
-import Controller from './Controller'
+import { IRoute, Request } from '../types'
+import Controller, { Methods } from './Controller'
 
 export default class SpendsController extends Controller {
 	constructor() {

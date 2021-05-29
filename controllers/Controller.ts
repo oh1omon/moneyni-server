@@ -1,6 +1,11 @@
 import { Router } from 'express'
 import { IRoute } from '../types'
 
+export enum Methods {
+	GET = 'GET',
+	POST = 'POST',
+}
+
 //Since this class is abstract we will inherit its properties to our actual classes
 export default abstract class Controller {
 	//On class initializing we define:

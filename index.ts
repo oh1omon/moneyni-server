@@ -38,10 +38,8 @@ const globalMiddleware = [
 
 const controllers = [new AuthController(), new SpendsController()]
 
-try {
+Promise.resolve().then(() => {
 	server.loadMiddleware(globalMiddleware)
 	server.loadControllers(controllers)
 	server.run()
-} catch (e) {
-	console.log(e)
-}
+})
