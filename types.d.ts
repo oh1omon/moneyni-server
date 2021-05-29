@@ -46,8 +46,46 @@ interface ISpendInput {
 }
 
 type TGetUserByEmail = (email: string) => Promise<IUserDocument>
+
 type TGetUserById = (id: string) => Promise<IUserDocument>
+
 type TCreateNewUser = (newUser: IUserInput) => Promise<IUserDocument>
+
 type TGetSpendsById = (idArr: Types.ObjectId[] | []) => Promise<ISpendDocument | ISpendDocument[] | string>
+
 type TAddNewSpend = (newSpend: ISpendInput) => Promise<ISpendDocument | string>
+
 type TAddNewSpendToUser = (userId: Types.ObjectId, newSpend: Types.ObjectId) => Promise<IUserDocument | string>
+
+type IAddSpendToUserValidator = (newSpend: IAddSpendToUserValProps) => boolean
+
+interface IAddSpendToUserValProps {
+	userId: Types.ObjectId
+	newSpendId: Types.ObjectId
+}
+
+type IAddSpendValidator = (newSpend: IAddSpendValProps) => boolean
+
+interface IAddSpendValProps {
+	category?: string
+	comment?: string
+	cost?: number
+	currency?: string
+}
+
+type IGetSpendsValidator = (newSpend: IGetSpendsValProps) => boolean
+
+type IGetSpendsValProps = Types.ObjectId[]
+
+type ISignInValidator = (signInData: ISignInValProps) => boolean
+
+interface ISignInValProps {
+	email?: string
+	password?: string
+}
+
+type ISignUpValidator = (signUpData: ISignUpValProps) => boolean
+
+interface ISignUpValProps extends ISignInValProps {
+	name?: string
+}

@@ -1,14 +1,12 @@
 import { Response, Router } from 'express'
 import { addNewSpend, addNewSpendToUser, getSpendsById } from '../services/database'
+import Validator from '../services/validator'
 import { Request } from '../types'
-import { addSpendToUserValidator } from '../validators/addSpendToUserValidator'
-import { addSpendValidator } from '../validators/addSpendValidator'
-import { getSpendsValidator } from '../validators/getSpendsValidator'
 
 const router = Router()
 
 router.get('/', (req: Request, res: Response) => {
-	const valRes = getSpendsValidator(req.body.spends)
+	const valRes = Validator.getSpendsValidator(req.body.spends)
 	if (valRes) return res.json({ message: 'wrong spendArr submitted' })
 	getSpendsById(req.body.spends)
 		.then((resp) =>
@@ -21,7 +19,7 @@ router.get('/', (req: Request, res: Response) => {
 })
 
 router.post('/add', (req: Request, res: Response) => {
-	const valRes = addSpendValidator(req.body)
+	const valRes = Validator.addSpendValidator(req.body)
 	if (valRes) return res.json({ message: 'wrong spend submitted' })
 	addNewSpend(req.body)
 		.then((resp) =>
@@ -35,7 +33,7 @@ router.post('/add', (req: Request, res: Response) => {
 
 router.post('/addtouser', (req: Request, res: Response) => {
 	if (!req.user) return res.json({ message: 'you have to be authenticated' })
-	const valRes = addSpendToUserValidator({
+	const valRes = Validator.addSpendToUserValidator({
 		userId: req.user._id,
 		newSpendId: req.body.newSpendId,
 	})

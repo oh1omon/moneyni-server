@@ -2,16 +2,15 @@ import { Response, Router } from 'express'
 import passport from 'passport'
 import { initializePassport } from '../passport/passport.config'
 import { createNewUser, getUserByEmail, getUserById } from '../services/database'
+import Validator from '../services/validator'
 import { Request } from '../types'
-import { signInValidator } from '../validators/signInValidator'
-import { signUpValidator } from '../validators/signUpValidator'
 
 const router = Router()
 
 initializePassport(passport, getUserByEmail, getUserById)
 
 router.post('/signin', (req: Request, res: Response) => {
-	const valRes = signInValidator(req.body)
+	const valRes = Validator.signInValidator(req.body)
 	if (valRes) return res.json({ message: 'wrong data submitted' })
 	passport.authenticate('local', function (err, user) {
 		if (err) {
@@ -38,7 +37,7 @@ router.post('/signin', (req: Request, res: Response) => {
 })
 
 router.post('/signup', (req: Request, res: Response) => {
-	const valRes = signUpValidator(req.body)
+	const valRes = Validator.signUpValidator(req.body)
 	if (valRes) return res.json({ message: 'wrong data submitted' })
 	createNewUser(req.body)
 		.then((resp) =>
