@@ -12,31 +12,6 @@ import {
 	TGetUserById,
 } from '../types'
 
-export let database: mongoose.Connection
-
-export const connect: () => void = () => {
-	if (database) {
-		return
-	}
-
-	mongoose.connect(process.env.DB_CONNECT_LINK, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useFindAndModify: false,
-		useCreateIndex: true,
-	})
-
-	database = mongoose.connection
-
-	database.once('open', async () => {
-		console.log('Connected to database')
-	})
-
-	database.on('error', () => {
-		console.log('Error connecting to database')
-	})
-}
-
 /**
  * @param {IUserInput} newUser object, containing fields of email, password, name
  * @return either error message or new User Object

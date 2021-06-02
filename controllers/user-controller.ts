@@ -25,6 +25,7 @@ export default class UserController extends Controller {
 	 * @returns {void}
 	 */
 	handleUpdate(req: Request, res: Response): void {
+		//TODO: create actual update functionality
 		res.json({ prikol: 'vnature prikol' })
 	}
 }

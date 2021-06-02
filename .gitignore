@@ -1,5 +1,11 @@
 node_modules
-build
+
+#ENV
 .env
+
+#If terrible has happened and code has been trancompiled into js
 *.js
 *.js.map
+
+#Letting eslint file to be uploaded
+!.eslintrc.js
