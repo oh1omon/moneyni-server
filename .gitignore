@@ -1,8 +1,5 @@
 node_modules
 build
-input.json
-queries.http
 .env
-.idea
 *.js
 *.js.map

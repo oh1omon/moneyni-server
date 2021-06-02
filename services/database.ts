@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
-import { Spend } from '../models/spend.schema'
-import { User } from '../models/user.schema'
+import { Spend } from '../models/spend-schema'
+import { User } from '../models/user-schema'
 import {
 	IUserDocument,
 	TAddNewSpend,

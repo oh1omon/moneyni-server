@@ -1,12 +1,13 @@
 import MongoStore from 'connect-mongo'
 import cors from 'cors'
-import * as dotenv from 'dotenv'
+import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import session from 'express-session'
 import passport from 'passport'
 import AuthController from './controllers/auth-controller'
 import SpendsController from './controllers/spends-controller'
-import Server from './server'
+import UserController from './controllers/user-controller'
+import Server from './typings/server'
 dotenv.config()
 
 const app: Application = express()
@@ -36,7 +37,7 @@ const globalMiddleware = [
 	passport.session(),
 ]
 
-const controllers = [new AuthController(), new SpendsController()]
+const controllers = [new AuthController(), new SpendsController(), new UserController()]
 
 Promise.resolve().then(() => {
 	server.loadMiddleware(globalMiddleware)

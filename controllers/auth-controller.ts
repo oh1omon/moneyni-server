@@ -3,7 +3,7 @@ import passport from 'passport'
 import { createNewUser } from '../services/database'
 import Validator from '../services/validator'
 import { IRoute, Request } from '../types'
-import Controller, { Methods } from './Controller'
+import Controller, { Methods } from '../typings/controller'
 
 export default class AuthController extends Controller {
 	constructor() {
