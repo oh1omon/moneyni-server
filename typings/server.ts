@@ -1,6 +1,5 @@
 import { Application, RequestHandler } from 'express'
 import http from 'http'
-import { connect } from '../services/database'
 import Controller from './controller'
 
 export default class Server {
@@ -13,9 +12,6 @@ export default class Server {
 	}
 
 	public run(): http.Server {
-		//Trying to connect to database
-		connect()
-
 		//Returning instance of working server
 		return this.app.listen(this.port, () => {
 			console.log(`The server is running on port ${this.port}`)

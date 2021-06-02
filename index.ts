@@ -7,6 +7,7 @@ import passport from 'passport'
 import AuthController from './controllers/auth-controller'
 import SpendsController from './controllers/spends-controller'
 import UserController from './controllers/user-controller'
+import DbService from './services/db-service'
 import Server from './typings/server'
 dotenv.config()
 
@@ -15,8 +16,11 @@ const app: Application = express()
 // //Extracting PORT & HOST variables from .env file
 const PORT: number = parseInt(process.env.PORT as string, 10)
 
-//Creating server class and passing express instance and PORT variable there
+//Initializing Server class and passing there app instance and port number
 const server = new Server(app, PORT)
+
+//Initializing DbService class by passing db connection uri to it
+const db = new DbService(process.env.DB_CONNECT_LINK)
 
 //Creating array of middleware that should be applied globally
 const globalMiddleware = [
@@ -41,6 +45,7 @@ const controllers = [new AuthController(), new SpendsController(), new UserContr
 
 Promise.resolve().then(() => {
 	server.loadMiddleware(globalMiddleware)
+	db.connect()
 	server.loadControllers(controllers)
 	server.run()
 })
