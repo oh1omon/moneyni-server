@@ -1,4 +1,6 @@
 import { Response } from 'express'
+import UserService from '../services/user-service'
+import validator from '../services/validator'
 import { IRoute, Request } from '../types'
 import Controller, { Methods } from '../typings/controller'
 
@@ -8,6 +10,8 @@ export default class UserController extends Controller {
 	}
 
 	path = '/user'
+
+	userService = new UserService()
 
 	routes: IRoute[] = [
 		{
@@ -24,8 +28,19 @@ export default class UserController extends Controller {
 	 * @param res
 	 * @returns {void}
 	 */
-	handleUpdate(req: Request, res: Response): void {
-		//TODO: create actual update functionality
-		res.json({ prikol: 'vnature prikol' })
+	async handleUpdate(req: Request, res: Response): Promise<void> {
+		if (!req.body) {
+			res.json({ message: 'you need to submit something' })
+		}
+
+		if (!req.user) {
+			res.json({ message: 'you need to be logged in to proceed' })
+		}
+
+		const updates = validator.update(req.body)
+
+		const result = await this.userService.updateUser(req.user.id, updates)
+
+		res.json(result)
 	}
 }

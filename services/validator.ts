@@ -1,4 +1,12 @@
-import { IAddSpendToUserValidator, IAddSpendValidator, IGetSpendsValidator, ISignInValidator, ISignUpValidator } from '../types'
+import mongoose, { isValidObjectId } from 'mongoose'
+import {
+	IAddSpendToUserValidator,
+	IAddSpendValidator,
+	IGetSpendsValidator,
+	ISignInValidator,
+	ISignUpValidator,
+	IUpdates,
+} from '../types'
 
 /**
  *Methods of this class provides validation functions
@@ -8,8 +16,23 @@ class Validator {
 	 * @param newSpend
 	 * @returns true or false depending on status of validation
 	 */
+	//todo: delete
 	addSpendToUserValidator: IAddSpendToUserValidator = (newSpend) => {
 		return !newSpend.userId || !newSpend.newSpendId
+	}
+
+	/**
+	 * This method checks for known properties for user and returns them in the checked object
+	 * @param updates
+	 * @returns proved updates object
+	 */
+	public update(updates: Record<string, number | string>): IUpdates {
+		let proved: IUpdates
+		if (typeof updates.name === 'string') proved.name = updates.name
+		if (typeof updates.password === 'string') proved.password = updates.password
+		if (isValidObjectId(updates.spends)) proved.spends = mongoose.Types.ObjectId(updates.spends)
+
+		return proved
 	}
 
 	/**
