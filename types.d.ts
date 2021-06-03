@@ -52,9 +52,18 @@ interface ISpendInput {
 	currency: ISpend['currency']
 }
 
-type TGetUserByEmail = (email: string) => Promise<IUserDocument>
+interface IMessage {
+	success: boolean
+	message: string
+}
+interface IServiceUser {
+	message: IMessage
+	user?: IUserDocument
+}
 
-type TGetUserById = (id: string) => Promise<IUserDocument>
+type TGetUserByEmail = (email: string) => Promise<IUserDocument | Record<string, never>>
+
+type TGetUserById = (id: string) => Promise<IUserDocument | Record<string, never>>
 
 type TCreateNewUser = (newUser: IUserInput) => Promise<IUserDocument>
 
@@ -95,4 +104,18 @@ type ISignUpValidator = (signUpData: ISignUpValProps) => boolean
 
 interface ISignUpValProps extends ISignInValProps {
 	name?: string
+}
+
+//UserService
+
+interface IUpdates {
+	password?: string
+	name?: string
+	spends?: Types.ObjectId
+}
+interface IUserService {
+	findUserById(id: string): Promise<IUserDocument | Record<string, never>>
+	findUserByEmail(email: string): Promise<IUserDocument | Record<string, never>>
+	createNewUser(newUser: IUserInput): Promise<IServiceUser>
+	updateUser(userId: string, updates: IUpdates): Promise<IServiceUser>
 }

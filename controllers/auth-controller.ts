@@ -1,6 +1,7 @@
 import { Response } from 'express'
 import passport from 'passport'
-import { createNewUser } from '../services/database'
+import { initializePassport } from '../passport/passport-config'
+import UserService from '../services/user-service'
 import Validator from '../services/validator'
 import { IRoute, Request } from '../types'
 import Controller, { Methods } from '../typings/controller'
@@ -11,6 +12,10 @@ export default class AuthController extends Controller {
 	}
 
 	path = '/auth'
+
+	passport = initializePassport(passport)
+
+	userService = new UserService()
 
 	routes: IRoute[] = [
 		{
@@ -89,19 +94,25 @@ export default class AuthController extends Controller {
 			res.json({ message: 'wrong data submitted' })
 			return
 		}
-		createNewUser(req.body)
+		this.userService
+			.createNewUser(req.body)
 			.then((resp) =>
 				res.json({
-					message: 'User created!',
-					user: {
-						_id: resp._id,
-						email: resp.email,
-						name: resp.email,
-						spends: resp.spends,
-					},
+					message: resp.message,
+					user: resp.user
+						? {
+								_id: resp.user._id,
+								email: resp.user.email,
+								name: resp.user.name,
+								spends: resp.user.spends,
+						  }
+						: null,
 				})
 			)
-			.catch((err) => res.json(err))
+			.catch((err) => {
+				console.log(err)
+				res.json({ err: 'internal error' })
+			})
 	}
 
 	/**

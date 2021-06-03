@@ -1,15 +1,14 @@
 import bcrypt from 'bcrypt'
 import { PassportStatic } from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { IUser, IUserDocument, TGetUserByEmail, TGetUserById } from '../types'
+import UserService from '../services/user-service'
+import { IUser } from '../types'
 
-export const initializePassport = (
-	passport: PassportStatic,
-	getUserByEmail: TGetUserByEmail,
-	getUserById: TGetUserById
-): void => {
+const userService = new UserService()
+
+export const initializePassport = (passport: PassportStatic): void => {
 	const authenticateUser = async (email: string, password: string, done: any) => {
-		const user: IUserDocument = await getUserByEmail(email)
+		const user = await userService.findUserByEmail(email)
 		if (!user) {
 			return done(null, false, {
 				message: `No user found with ${email} email!`,
@@ -35,6 +34,6 @@ export const initializePassport = (
 	//     });
 	// });
 	passport.deserializeUser(async (id: string, done: any) => {
-		return done(null, await getUserById(id))
+		return done(null, await userService.findUserById(id))
 	})
 }
