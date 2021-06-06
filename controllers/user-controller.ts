@@ -11,8 +11,6 @@ export default class UserController extends Controller {
 
 	path = '/user'
 
-	userService = new UserService()
-
 	routes: IRoute[] = [
 		{
 			path: '/update',
@@ -39,7 +37,9 @@ export default class UserController extends Controller {
 
 		const updates = validator.update(req.body)
 
-		const result = await this.userService.updateUser(req.user.id, updates)
+		const userService = new UserService(updates)
+
+		const result = await userService.updateUser()
 
 		res.json(result)
 	}

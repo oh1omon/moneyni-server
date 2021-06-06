@@ -15,8 +15,6 @@ export default class AuthController extends Controller {
 
 	passport = initializePassport(passport)
 
-	userService = new UserService()
-
 	routes: IRoute[] = [
 		{
 			path: '/login',
@@ -94,8 +92,11 @@ export default class AuthController extends Controller {
 			res.json({ message: 'wrong data submitted' })
 			return
 		}
-		this.userService
-			.createNewUser(req.body)
+
+		const userService = new UserService(req.body)
+
+		userService
+			.createNewUser()
 			.then((resp) =>
 				res.json({
 					message: resp.message,

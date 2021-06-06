@@ -4,11 +4,10 @@ import { Strategy as LocalStrategy } from 'passport-local'
 import UserService from '../services/user-service'
 import { IUser } from '../types'
 
-const userService = new UserService()
-
 export const initializePassport = (passport: PassportStatic): void => {
 	const authenticateUser = async (email: string, password: string, done: any) => {
-		const user = await userService.findUserByEmail(email)
+		const userService = new UserService({ email })
+		const user = await userService.findUserByEmail()
 		if (!user) {
 			return done(null, false, {
 				message: `No user found with ${email} email!`,
@@ -34,6 +33,7 @@ export const initializePassport = (passport: PassportStatic): void => {
 	//     });
 	// });
 	passport.deserializeUser(async (id: string, done: any) => {
-		return done(null, await userService.findUserById(id))
+		const userService = new UserService({ id })
+		return done(null, await userService.findUserById())
 	})
 }

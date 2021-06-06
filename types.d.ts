@@ -113,9 +113,18 @@ interface IUpdates {
 	name?: string
 	spends?: Types.ObjectId
 }
-interface IUserService {
-	findUserById(id: string): Promise<IUserDocument | Record<string, never>>
-	findUserByEmail(email: string): Promise<IUserDocument | Record<string, never>>
-	createNewUser(newUser: IUserInput): Promise<IServiceUser>
-	updateUser(userId: string, updates: IUpdates): Promise<IServiceUser>
+// interface IUserService {
+// 	user: IUserUC
+// 	findUserById(id: string): Promise<IUserDocument | Record<string, never>>
+// 	findUserByEmail(email: string): Promise<IUserDocument | Record<string, never>>
+// 	createNewUser(newUser: IUserInput): Promise<IServiceUser>
+// 	updateUser(userId: string, updates: IUpdates): Promise<IServiceUser>
+// }
+
+interface IUserUC {
+	name?: string | null
+	id?: string | null
+	password?: string | null
+	email?: string | null
+	spends?: Types.ObjectId | null
 }

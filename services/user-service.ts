@@ -1,20 +1,38 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import { User } from '../models/user-schema'
-import { IServiceUser, IUpdates, IUserDocument, IUserInput, IUserService } from '../types'
+import { IServiceUser, IUserDocument, IUserUC } from '../types'
 
-export default class UserService implements IUserService {
+export default class UserService {
+	//User property interface
+	public readonly user: IUserUC = {
+		id: null,
+		name: null,
+		email: null,
+		password: null,
+		spends: null,
+	}
+
+	constructor({ id, name, email, password, spends }: IUserUC) {
+		// this.user.id = id
+		// this.user.name = name
+		// this.user.email = email
+		// this.user.password = password
+		// this.user.spends = spends
+		this.user = { id, name, email, password, spends }
+	}
+
 	/**
 	 * Method performs searching database with id passed into function, and returns found doc, or empty object
 	 * @param id string
 	 */
-	public async findUserById(id: string): Promise<IUserDocument | Record<string, never>> {
+	public async findUserById(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findById(id)
+			const doc = await User.findById(this.user.id)
 			return doc
 		} catch (e) {
 			console.log(e)
-			return {}
+			return null
 		}
 	}
 
@@ -22,38 +40,37 @@ export default class UserService implements IUserService {
 	 * Method performs searching database with email passed into function, and returns found doc, or empty object
 	 * @param email string
 	 */
-	public async findUserByEmail(email: string): Promise<IUserDocument | Record<string, never>> {
+	public async findUserByEmail(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findOne({ email })
+			const doc = await User.findOne({ email: this.user.email })
 			return doc
 		} catch (e) {
 			console.log(e)
-			return {}
+			return null
 		}
 	}
 
 	/**
 	 * Method check if user already registered or not and then creates, or not creates a new user
-	 * @param newUser
 	 * @returns {Promise<ICreateNewUser>}
 	 */
-	public async createNewUser(newUser: IUserInput): Promise<IServiceUser> {
+	public async createNewUser(): Promise<IServiceUser> {
 		try {
 			//Checking if user already exists in DB
-			const foundUser = this.findUserByEmail(newUser.email)
+			const foundUser = this.findUserByEmail()
 			if (Object.keys(foundUser).length > 0) {
 				return { message: { success: false, message: 'there is an account with this email already' } }
 			}
 
 			//Hashing password
-			const hashedPassword: string = await bcrypt.hash(newUser.password, 10)
+			const hashedPassword: string = await bcrypt.hash(this.user.password, 10)
 
 			//Create new USer
 			const injectedUser: IUserDocument = await User.create({
 				_id: new mongoose.Types.ObjectId(),
-				email: newUser.email,
+				email: this.user.email,
 				password: hashedPassword,
-				name: newUser.name,
+				name: this.user.name,
 				spends: [],
 			})
 
@@ -71,16 +88,12 @@ export default class UserService implements IUserService {
 	 * @param updates
 	 * @returns
 	 */
-	public async updateUser(userId: string, updates: IUpdates): Promise<IServiceUser> {
+	public async updateUser(): Promise<IServiceUser> {
 		try {
 			//todo: check if everything works here
 			const updatedUser = await User.findByIdAndUpdate(
-				userId,
-				{
-					$push: { spends: updates?.spends },
-					name: updates?.name,
-					password: updates.password && (await bcrypt.hash(updates?.password, 10)),
-				},
+				this.user.id,
+				this.updateDataPrep(this.user as { [key: string]: unknown }),
 				{
 					new: true,
 				}
@@ -92,5 +105,36 @@ export default class UserService implements IUserService {
 
 			return { message: { success: false, message: 'Something went wrong' } }
 		}
+	}
+
+	/**
+	 * This method is going to prepare data for update method
+	 * It will delete null-ish fields and will transform spends field to $push field
+	 * @param uncheckedData
+	 * @returns {object} with checked data
+	 */
+	private async updateDataPrep(uncheckedData: Record<string, unknown>) {
+		const acc: Record<string, unknown> = {}
+		for (const k in uncheckedData) {
+			//this part is working with spends property
+			if (uncheckedData['spends'] && k === 'spends') {
+				acc.$push = { spends: uncheckedData[k] }
+				continue
+			}
+
+			//This function crypting password
+			if (uncheckedData['password'] && k === 'password') {
+				const password = await bcrypt.hash(uncheckedData[k], 10)
+				acc[k] = password
+				continue
+			}
+
+			//All other properties will be added, excluding id
+			if (uncheckedData[k] && k !== 'id') {
+				acc[k] = uncheckedData[k]
+			}
+		}
+
+		return acc
 	}
 }
