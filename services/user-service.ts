@@ -90,14 +90,15 @@ export default class UserService {
 	 */
 	public async updateUser(): Promise<IServiceUser> {
 		try {
-			//todo: check if everything works here
 			const updatedUser = await User.findByIdAndUpdate(
 				this.user.id,
-				this.updateDataPrep(this.user as { [key: string]: unknown }),
+				await this.updateDataPrep(this.user as { [key: string]: unknown }),
 				{
 					new: true,
 				}
 			)
+
+			updatedUser.password = undefined
 
 			return { message: { success: true, message: 'You have successfully updated your profile! ' }, user: updatedUser }
 		} catch (e) {

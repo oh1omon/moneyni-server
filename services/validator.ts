@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 import {
 	IAddSpendToUserValidator,
 	IAddSpendValidator,
@@ -27,10 +27,10 @@ class Validator {
 	 * @returns proved updates object
 	 */
 	public update(updates: Record<string, number | string>): IUpdates {
-		let proved: IUpdates
+		const proved: IUpdates = {}
 		if (typeof updates.name === 'string') proved.name = updates.name
 		if (typeof updates.password === 'string') proved.password = updates.password
-		if (isValidObjectId(updates.spends)) proved.spends = mongoose.Types.ObjectId(updates.spends)
+		if (Types.ObjectId.isValid(updates.spends)) proved.spends = Types.ObjectId(updates.spends)
 
 		return proved
 	}

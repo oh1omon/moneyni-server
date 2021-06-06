@@ -42,7 +42,7 @@ export default class UserController extends Controller {
 
 		const updates = validator.update(req.body)
 
-		const userService = new UserService(updates)
+		const userService = new UserService({ id: req.user.id, ...updates })
 
 		const result = await userService.updateUser()
 
