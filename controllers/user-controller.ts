@@ -17,6 +17,11 @@ export default class UserController extends Controller {
 			method: Methods.POST,
 			handler: this.handleUpdate,
 		},
+		{
+			path: '/retrieve',
+			method: Methods.GET,
+			handler: this.handleRetrieve,
+		},
 	]
 
 	/**
@@ -42,5 +47,15 @@ export default class UserController extends Controller {
 		const result = await userService.updateUser()
 
 		res.json(result)
+	}
+
+	/**
+	 * This method responses to the client part with user's deserialized object
+	 * @param req
+	 * @param res
+	 * @returns {void}
+	 */
+	handleRetrieve(req: Request, res: Response): void {
+		res.json({ user: req.user })
 	}
 }

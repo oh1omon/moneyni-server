@@ -1,0 +1,29 @@
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+	"email":"artem.zagaro@wwewewwe.com", 
+	"password": "12345678",
+	"name":"drtem"
+}
+
+###
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+	"email":"artem.zagaro@wweswewwe.com",
+	"password": "12345678"
+}
+
+###
+
+GET http://localhost:8080/user/retrieve
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/auth/logout
+Content-Type: application/json
+

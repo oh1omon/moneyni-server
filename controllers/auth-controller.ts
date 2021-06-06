@@ -28,13 +28,8 @@ export default class AuthController extends Controller {
 		},
 		{
 			path: '/logout',
-			method: Methods.POST,
-			handler: this.handleLogout,
-		},
-		{
-			path: '/retrieve',
 			method: Methods.GET,
-			handler: this.handleRetrieve,
+			handler: this.handleLogout,
 		},
 	]
 
@@ -97,19 +92,26 @@ export default class AuthController extends Controller {
 
 		userService
 			.createNewUser()
-			.then((resp) =>
-				res.json({
-					message: resp.message,
-					user: resp.user
-						? {
-								_id: resp.user._id,
-								email: resp.user.email,
-								name: resp.user.name,
-								spends: resp.user.spends,
-						  }
-						: null,
-				})
-			)
+			.then((r) => {
+				if (r.message.success) {
+					req.login(r.user, function (err) {
+						if (err) {
+							res.json({ message: 'internal error' })
+							return
+						}
+						res.json({
+							message: r.message,
+							user: {
+								_id: r.user._id,
+								email: r.user.email,
+								name: r.user.name,
+								spends: r.user.spends,
+							},
+						})
+						return
+					})
+				}
+			})
 			.catch((err) => {
 				console.log(err)
 				res.json({ err: 'internal error' })
@@ -131,15 +133,5 @@ export default class AuthController extends Controller {
 				console.log(err)
 			}
 		})
-	}
-
-	/**
-	 * This method responses to the client part with user's deserialized object
-	 * @param req
-	 * @param res
-	 * @returns {void}
-	 */
-	handleRetrieve(req: Request, res: Response): void {
-		res.json({ user: req.user })
 	}
 }

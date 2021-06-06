@@ -27,13 +27,10 @@ export const initializePassport = (passport: PassportStatic): void => {
 	passport.serializeUser((user: IUser, done: any) => {
 		done(null, user.id)
 	})
-	// passport.deserializeUser(function (id: string, done: any) {
-	//     UserModel.findById(id, function (err: any, user: any) {
-	//         done(err, user);
-	//     });
-	// });
 	passport.deserializeUser(async (id: string, done: any) => {
 		const userService = new UserService({ id })
-		return done(null, await userService.findUserById())
+		const user = await userService.findUserById()
+		user.password = undefined
+		return done(null, user)
 	})
 }
