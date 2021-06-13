@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { addNewSpend, getSpendsById } from '../services/database'
+import SpendService from '../services/spend-service'
 import Validator from '../services/validator'
 import { IRoute, Request } from '../types'
 import Controller, { Methods } from '../typings/controller'
@@ -37,14 +37,16 @@ export default class SpendsController extends Controller {
 			res.json({ message: 'wrong spendArr submitted' })
 			return
 		}
-		getSpendsById(req.body.spends)
-			.then((resp) =>
-				res.json({
-					message: 'Spends found: ',
-					spends: resp,
-				})
-			)
-			.catch((err) => res.json(err))
+		const { idArr } = req.body
+		const spendsService = new SpendService({ idArr })
+
+		spendsService
+			.get()
+			.then((r) => res.json(r))
+			.catch((e) => {
+				console.log(e)
+				res.json({ err: 'Some very hard internal error' })
+			})
 	}
 
 	/**
@@ -60,13 +62,16 @@ export default class SpendsController extends Controller {
 			res.json({ message: 'wrong spend submitted' })
 			return
 		}
-		addNewSpend(req.body)
-			.then((resp) =>
-				res.json({
-					message: 'Spend added',
-					spend: resp,
-				})
-			)
-			.catch((err) => res.json(err))
+		const { category, cost, currency, comment } = req.body
+
+		const spendsService = new SpendService({ category, cost, currency, comment })
+
+		spendsService
+			.add()
+			.then((r) => res.json(r))
+			.catch((e) => {
+				console.log(e)
+				res.json({ err: 'Some very hard internal error' })
+			})
 	}
 }
