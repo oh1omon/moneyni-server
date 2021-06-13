@@ -57,7 +57,7 @@ interface IMessage {
 	message: string
 }
 interface IServiceUser {
-	message: IMessage
+	status: IMessage
 	user?: IUserDocument
 }
 

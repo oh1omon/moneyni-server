@@ -54,7 +54,7 @@ export default class UserService {
 			//Checking if user already exists in DB
 			const foundUser = this.findUserByEmail()
 			if (Object.keys(foundUser).length > 0) {
-				return { message: { success: false, message: 'there is an account with this email already' } }
+				return { status: { success: false, message: 'there is an account with this email already' } }
 			}
 
 			//Hashing password
@@ -69,11 +69,11 @@ export default class UserService {
 				spends: [],
 			})
 
-			return { message: { success: true, message: 'You have been successfully sign up ' }, user: injectedUser }
+			return { status: { success: true, message: 'You have been successfully sign up ' }, user: injectedUser }
 		} catch (e) {
 			console.log(e)
 
-			return { message: { success: false, message: 'Something went wrong' } }
+			return { status: { success: false, message: e.message } }
 		}
 	}
 
@@ -95,11 +95,11 @@ export default class UserService {
 
 			updatedUser.password = undefined
 
-			return { message: { success: true, message: 'You have successfully updated your profile! ' }, user: updatedUser }
+			return { status: { success: true, message: 'You have successfully updated your profile! ' }, user: updatedUser }
 		} catch (e) {
 			console.log(e)
 
-			return { message: { success: false, message: 'Something went wrong' } }
+			return { status: { success: false, message: e.message } }
 		}
 	}
 

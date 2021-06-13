@@ -52,7 +52,7 @@ export default class SpendService {
 	 * This method tries to add a new spend to DB.
 	 * In case of success it will return status object and new spend doc object.
 	 * In case of failure it will return only status object with message returned by DB.
-	 * @returns
+	 * @returns {TAddSpend}
 	 */
 	public async add(): TAddSpend {
 		try {
