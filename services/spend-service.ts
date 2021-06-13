@@ -12,7 +12,7 @@ export default class SpendService {
 	 * This method is fetching spends by id array provided to the class constructor
 	 * @returns {TAddSpend}
 	 */
-	public async add(): TAddSpend {
+	public async get(): TAddSpend {
 		try {
 			// We are trying to find spends, by ids passed int o class constructor
 			const foundDocs = await Spend.find({
