@@ -113,13 +113,6 @@ interface IUpdates {
 	name?: string
 	spends?: Types.ObjectId
 }
-// interface IUserService {
-// 	user: IUserUC
-// 	findUserById(id: string): Promise<IUserDocument | Record<string, never>>
-// 	findUserByEmail(email: string): Promise<IUserDocument | Record<string, never>>
-// 	createNewUser(newUser: IUserInput): Promise<IServiceUser>
-// 	updateUser(userId: string, updates: IUpdates): Promise<IServiceUser>
-// }
 
 interface IUserUC {
 	name?: string | null
@@ -128,3 +121,11 @@ interface IUserUC {
 	email?: string | null
 	spends?: Types.ObjectId | null
 }
+
+type TAddSpend = Promise<
+	| {
+			status: { success: boolean; message: string }
+			spends: ISpendDocument[]
+	  }
+	| { status: { success: boolean; message: string }; spends?: undefined }
+>

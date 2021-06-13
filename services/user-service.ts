@@ -14,11 +14,6 @@ export default class UserService {
 	}
 
 	constructor({ id, name, email, password, spends }: IUserUC) {
-		// this.user.id = id
-		// this.user.name = name
-		// this.user.email = email
-		// this.user.password = password
-		// this.user.spends = spends
 		this.user = { id, name, email, password, spends }
 	}
 
