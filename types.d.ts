@@ -122,10 +122,23 @@ interface IUserUC {
 	spends?: Types.ObjectId | null
 }
 
-type TAddSpend = Promise<
+interface ISpendSC {
+	category?: string | undefined
+	currency?: string | undefined
+	cost?: number | undefined
+	comment?: string | undefined
+	idArr?: Types.ObjectId[] | undefined
+}
+
+type TGetSpend = Promise<
 	| {
 			status: { success: boolean; message: string }
 			spends: ISpendDocument[]
 	  }
+	| { status: { success: boolean; message: string }; spends?: undefined }
+>
+
+type TAddSpend = Promise<
+	| { status: { success: boolean; message: string }; spends: ISpendDocument }
 	| { status: { success: boolean; message: string }; spends?: undefined }
 >

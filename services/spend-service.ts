@@ -1,18 +1,27 @@
 import { Types } from 'mongoose'
 import { Spend } from '../models/spend-schema'
-import { TAddSpend } from '../types'
+import { ISpendSC, TAddSpend, TGetSpend } from '../types'
 
 export default class SpendService {
-	public readonly idArr: Types.ObjectId
-	constructor({ idArr }) {
+	public readonly idArr: Types.ObjectId[]
+	public readonly category: string
+	public readonly cost: number
+	public readonly comment: string
+	public readonly currency: string
+
+	constructor({ idArr, category, cost, comment, currency }: ISpendSC) {
 		this.idArr = idArr
+		this.category = category
+		this.cost = cost
+		this.comment = comment
+		this.currency = currency
 	}
 
 	/**
 	 * This method is fetching spends by id array provided to the class constructor
 	 * @returns {TAddSpend}
 	 */
-	public async get(): TAddSpend {
+	public async get(): TGetSpend {
 		try {
 			// We are trying to find spends, by ids passed int o class constructor
 			const foundDocs = await Spend.find({
@@ -22,8 +31,8 @@ export default class SpendService {
 			// Then we are returning object with status object and spends array
 			return {
 				status: {
-					success: false,
-					message: 'Internal error has happened, please try again later',
+					success: true,
+					message: 'Spends have been successfully found!',
 				},
 				spends: foundDocs,
 			}
@@ -34,6 +43,43 @@ export default class SpendService {
 				status: {
 					success: false,
 					message: 'Internal error has happened, please try again later',
+				},
+			}
+		}
+	}
+
+	/**
+	 * This method tries to add a new spend to DB.
+	 * In case of success it will return status object and new spend doc object.
+	 * In case of failure it will return only status object with message returned by DB.
+	 * @returns
+	 */
+	public async add(): TAddSpend {
+		try {
+			//Trying to insert new Spend
+			const addedSpend = await Spend.create({
+				_id: new Types.ObjectId(),
+				category: this.category,
+				comment: this.comment,
+				cost: this.cost,
+				currency: this.currency,
+			})
+
+			// Then we are returning object with status object and spends array
+			return {
+				status: {
+					success: true,
+					message: 'Spend has been successfully added!',
+				},
+				spends: addedSpend,
+			}
+		} catch (e) {
+			// If something goes wrong, we returning just a status object and logging to console the actual error
+			console.log(e)
+			return {
+				status: {
+					success: false,
+					message: e.message,
 				},
 			}
 		}
