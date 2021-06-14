@@ -52,7 +52,7 @@ export default class UserService {
 	public async createNewUser(): Promise<IServiceUser> {
 		try {
 			//Checking if user already exists in DB
-			const foundUser = this.findUserByEmail()
+			const foundUser = await this.findUserByEmail()
 			if (Object.keys(foundUser).length > 0) {
 				return { status: { success: false, message: 'there is an account with this email already' } }
 			}

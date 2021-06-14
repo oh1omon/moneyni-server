@@ -98,7 +98,7 @@ export default class AuthController extends Controller {
 						})
 						return
 					})
-				}
+				} else res.json(r)
 			})
 			.catch((err) => {
 				console.log(err)
