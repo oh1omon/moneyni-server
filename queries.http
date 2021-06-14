@@ -37,3 +37,24 @@ Content-Type: application/json
 GET http://localhost:8080/auth/logout
 Content-Type: application/json
 
+###
+
+POST http://localhost:8080/spends/
+Content-Type: application/json
+
+{
+	"idArr":["60586bf127e9e21fdf89c433"]
+}
+
+###
+
+POST http://localhost:8080/spends/add
+Content-Type: application/json
+
+{
+	"category":"Travel",
+	"cost":"1212",
+	"currency":"$"
+}
+
+###
