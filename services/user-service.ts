@@ -57,6 +57,10 @@ export default class UserService {
 				return { status: { success: false, message: 'there is an account with this email already' } }
 			}
 
+			//Checking password length
+			if (this.user.password.length < 8)
+				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+
 			//Hashing password
 			const hashedPassword: string = await bcrypt.hash(this.user.password, 10)
 
@@ -85,6 +89,10 @@ export default class UserService {
 	 */
 	public async updateUser(): Promise<IServiceUser> {
 		try {
+			//Checking password length
+			if (this.user.password.length < 8)
+				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+
 			const updatedUser = await User.findByIdAndUpdate(
 				this.user.id,
 				await this.updateDataPrep(this.user as { [key: string]: unknown }),
