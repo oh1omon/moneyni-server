@@ -93,6 +93,8 @@ export default class UserService {
 				}
 			)
 
+			if (!updatedUser) return { status: { success: false, message: 'No user found to update' } }
+
 			updatedUser.password = undefined
 
 			return { status: { success: true, message: 'You have successfully updated your profile! ' }, user: updatedUser }

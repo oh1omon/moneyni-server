@@ -23,8 +23,7 @@ POST http://localhost:8080/user/update
 Content-Type: application/json
 
 {
-	"name":"testeri1",
-	"password":"123456789"
+	"name":"testeri2"
 }
 
 ###
@@ -43,7 +42,7 @@ POST http://localhost:8080/spends/
 Content-Type: application/json
 
 {
-	"idArr":["60586bf127e9e21fdf89c433"]
+	"idArr":["60586bf127e9e21fdf89c433","60c764f0babbbc0babe9d664"]
 }
 
 ###

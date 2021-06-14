@@ -37,11 +37,12 @@ export default class UserController extends Controller {
 
 		if (!req.user) {
 			res.json({ message: 'you need to be logged in to proceed' })
+			return
 		}
 
 		const { name, password, spends } = req.body
 
-		const userService = new UserService({ id: req.user.id, name, password, spends })
+		const userService = new UserService({ id: req.user?.id, name, password, spends })
 
 		const result = await userService.updateUser()
 
