@@ -1,6 +1,5 @@
 import { Response } from 'express'
 import SpendService from '../services/spend-service'
-import Validator from '../services/validator'
 import { IRoute, Request } from '../types'
 import Controller, { Methods } from '../typings/controller'
 
@@ -32,11 +31,6 @@ export default class SpendsController extends Controller {
 	 * @returns {void}
 	 */
 	handleGet(req: Request, res: Response): void {
-		const valRes = Validator.getSpendsValidator(req.body.spends)
-		if (valRes) {
-			res.json({ message: 'wrong spendArr submitted' })
-			return
-		}
 		const { idArr } = req.body
 		const spendsService = new SpendService({ idArr })
 
@@ -57,11 +51,6 @@ export default class SpendsController extends Controller {
 	 * @returns {void}
 	 */
 	handleAdd(req: Request, res: Response): void {
-		const valRes = Validator.addSpendValidator(req.body)
-		if (valRes) {
-			res.json({ message: 'wrong spend submitted' })
-			return
-		}
 		const { category, cost, currency, comment } = req.body
 
 		const spendsService = new SpendService({ category, cost, currency, comment })

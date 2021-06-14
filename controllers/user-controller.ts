@@ -1,6 +1,5 @@
 import { Response } from 'express'
 import UserService from '../services/user-service'
-import validator from '../services/validator'
 import { IRoute, Request } from '../types'
 import Controller, { Methods } from '../typings/controller'
 
@@ -25,7 +24,7 @@ export default class UserController extends Controller {
 	]
 
 	/**
-	 * This method performs validation of user input and then calls user update function.
+	 * This method calls user update function.
 	 * After that, this handler responses to the client part according to result of user update function
 	 * @param req
 	 * @param res
@@ -40,9 +39,9 @@ export default class UserController extends Controller {
 			res.json({ message: 'you need to be logged in to proceed' })
 		}
 
-		const updates = validator.update(req.body)
+		const { name, password, spends } = req.body
 
-		const userService = new UserService({ id: req.user.id, ...updates })
+		const userService = new UserService({ id: req.user.id, name, password, spends })
 
 		const result = await userService.updateUser()
 
