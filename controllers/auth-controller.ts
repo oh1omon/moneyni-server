@@ -75,35 +75,34 @@ export default class AuthController extends Controller {
 	 * @param res
 	 * @returns {void}
 	 */
-	handleRegister(req: Request, res: Response): void {
+	async handleRegister(req: Request, res: Response): Promise<void> {
 		const userService = new UserService(req.body)
 
-		userService
-			.createNewUser()
-			.then((r) => {
-				if (r.status.success) {
-					req.login(r.user, (err) => {
-						if (err) {
-							res.json({ status: { success: false, message: 'Problem in signing you in after signing you up' } })
-							return
-						}
-						res.json({
-							status: r.status,
-							user: {
-								_id: r.user._id,
-								email: r.user.email,
-								name: r.user.name,
-								spends: r.user.spends,
-							},
-						})
+		try {
+			const result = await userService.createNewUser()
+
+			if (result.status.success) {
+				req.login(result.user, (err) => {
+					if (err) {
+						res.json({ status: { success: false, message: 'Problem in signing you in after signing you up' } })
 						return
+					}
+					res.json({
+						status: result.status,
+						user: {
+							_id: result.user._id,
+							email: result.user.email,
+							name: result.user.name,
+							spends: result.user.spends,
+						},
 					})
-				} else res.json(r)
-			})
-			.catch((err) => {
-				console.log(err)
-				res.json({ err: 'internal error' })
-			})
+					return
+				})
+			} else res.json(result)
+		} catch (e) {
+			console.log(e)
+			res.json({ err: 'internal error' })
+		}
 	}
 
 	/**
