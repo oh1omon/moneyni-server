@@ -2,7 +2,7 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-	"email":"test@test24.com", 
+	"email":"test@test3.com", 
 	"password": "12345678",
 	"name":"test"
 }
@@ -13,7 +13,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-	"email":"test@test24.com", 
+	"email":"test@test3.com", 
 	"password": "123456789"
 }
 

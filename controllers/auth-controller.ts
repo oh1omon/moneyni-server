@@ -42,16 +42,16 @@ export default class AuthController extends Controller {
 	handleLogin(req: Request, res: Response): void {
 		passport.authenticate('local', (err, user) => {
 			if (err) {
-				res.json({ message: err.message })
+				res.json({ status: { success: false, message: err.message } })
 				return
 			}
 			if (!user) {
-				res.json({ message: 'user not found' })
+				res.json({ status: { success: false, message: 'Wrong email or password' } })
 				return
 			}
-			req.login(user, function (err) {
+			req.login(user, (err) => {
 				if (err) {
-					res.json({ message: 'internal error' })
+					res.json({ status: { success: false, message: 'Internal error, try later please' } })
 					return
 				}
 				res.json({
@@ -101,7 +101,7 @@ export default class AuthController extends Controller {
 			} else res.json(result)
 		} catch (e) {
 			console.log(e)
-			res.json({ err: 'internal error' })
+			res.json({ status: { success: false, message: 'Internal error, try later please' } })
 		}
 	}
 

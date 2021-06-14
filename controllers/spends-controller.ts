@@ -41,7 +41,7 @@ export default class SpendsController extends Controller {
 		} catch (e) {
 			console.log(e)
 
-			res.json({ err: 'Some very hard internal error' })
+			res.json({ status: { success: false, message: 'Internal error, try later please' } })
 		}
 	}
 
@@ -64,7 +64,7 @@ export default class SpendsController extends Controller {
 		} catch (e) {
 			console.log(e)
 
-			res.json({ err: 'Some very hard internal error' })
+			res.json({ status: { success: false, message: 'Internal error, try later please' } })
 		}
 	}
 }
