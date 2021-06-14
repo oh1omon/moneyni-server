@@ -53,7 +53,7 @@ export default class UserService {
 		try {
 			//Checking if user already exists in DB
 			const foundUser = await this.findUserByEmail()
-			if (Object.keys(foundUser).length > 0) {
+			if (foundUser) {
 				return { status: { success: false, message: 'there is an account with this email already' } }
 			}
 

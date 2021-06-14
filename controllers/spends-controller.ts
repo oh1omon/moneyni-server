@@ -24,43 +24,47 @@ export default class SpendsController extends Controller {
 	]
 
 	/**
-	 * This method performs validation of user input and then calls spends getter function.
+	 * This method calls spends getter function.
 	 * After that, this handler responses to the client part according to result of spends getter function
 	 * @param req
 	 * @param res
 	 * @returns {void}
 	 */
-	handleGet(req: Request, res: Response): void {
+	async handleGet(req: Request, res: Response): Promise<void> {
 		const { idArr } = req.body
 		const spendsService = new SpendService({ idArr })
 
-		spendsService
-			.get()
-			.then((r) => res.json(r))
-			.catch((e) => {
-				console.log(e)
-				res.json({ err: 'Some very hard internal error' })
-			})
+		try {
+			const spends = await spendsService.get()
+
+			res.json(spends)
+		} catch (e) {
+			console.log(e)
+
+			res.json({ err: 'Some very hard internal error' })
+		}
 	}
 
 	/**
-	 * This method performs validation of user input and then calls spends adding function.
+	 * This method calls spends adding function.
 	 * After that, this handler responses to the client part according to result of spends adding function
 	 * @param req
 	 * @param res
 	 * @returns {void}
 	 */
-	handleAdd(req: Request, res: Response): void {
+	async handleAdd(req: Request, res: Response): Promise<void> {
 		const { category, cost, currency, comment } = req.body
 
 		const spendsService = new SpendService({ category, cost, currency, comment })
 
-		spendsService
-			.add()
-			.then((r) => res.json(r))
-			.catch((e) => {
-				console.log(e)
-				res.json({ err: 'Some very hard internal error' })
-			})
+		try {
+			const newSpend = await spendsService.add()
+
+			res.json(newSpend)
+		} catch (e) {
+			console.log(e)
+
+			res.json({ err: 'Some very hard internal error' })
+		}
 	}
 }
