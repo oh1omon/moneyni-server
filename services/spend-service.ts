@@ -25,6 +25,13 @@ export default class SpendService {
 	 */
 	public async get(): TGetSpend {
 		try {
+			if (!this.owner)
+				return {
+					status: {
+						success: false,
+						message: 'You have to be logged in to fetch your spends',
+					},
+				}
 			// We are trying to find spends, by ids passed int o class constructor
 			const foundDocs = await Spend.find({
 				_id: { $in: this.idArr },

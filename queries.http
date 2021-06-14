@@ -2,7 +2,7 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-	"email":"test@test3.com", 
+	"email":"test@test1.com", 
 	"password": "12345678",
 	"name":"test"
 }
@@ -13,7 +13,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-	"email":"test@test3.com", 
+	"email":"test@test.com", 
 	"password": "123456789"
 }
 
@@ -43,7 +43,7 @@ POST http://localhost:8080/spends/
 Content-Type: application/json
 
 {
-	"idArr":["60586bf127e9e21fdf89c433","60c764f0babbbc0babe9d664"]
+	"idArr":["60c7723ea2aca7192b6b045e","60c77264a2aca7192b6b0461"]
 }
 
 ###
@@ -52,8 +52,8 @@ POST http://localhost:8080/spends/add
 Content-Type: application/json
 
 {
-	"category":"Travel",
-	"cost":"1212",
+	"category":"Housing",
+	"cost":"789",
 	"currency":"$"
 }
 
