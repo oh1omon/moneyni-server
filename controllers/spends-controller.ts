@@ -33,7 +33,7 @@ export default class SpendsController extends Controller {
 	async handleGet(req: Request, res: Response): Promise<void> {
 		try {
 			const { idArr } = req.body
-			const spendsService = new SpendService({ idArr })
+			const spendsService = new SpendService({ idArr, owner: req.user?._id })
 
 			const spends = await spendsService.get()
 

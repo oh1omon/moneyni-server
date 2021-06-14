@@ -28,6 +28,7 @@ export default class SpendService {
 			// We are trying to find spends, by ids passed int o class constructor
 			const foundDocs = await Spend.find({
 				_id: { $in: this.idArr },
+				owner: this.owner,
 			})
 
 			// Then we are returning object with status object and spends array
