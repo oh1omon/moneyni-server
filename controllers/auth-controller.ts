@@ -76,9 +76,9 @@ export default class AuthController extends Controller {
 	 * @returns {void}
 	 */
 	async handleRegister(req: Request, res: Response): Promise<void> {
-		const userService = new UserService(req.body)
-
 		try {
+			const userService = new UserService(req.body)
+
 			const result = await userService.createNewUser()
 
 			if (result.status.success) {

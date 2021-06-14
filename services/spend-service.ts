@@ -4,13 +4,15 @@ import { ISpendSC, TAddSpend, TGetSpend } from '../types'
 
 export default class SpendService {
 	public readonly idArr: Types.ObjectId[]
+	public readonly owner: Types.ObjectId
 	public readonly category: string
 	public readonly cost: number
 	public readonly comment: string
 	public readonly currency: string
 
-	constructor({ idArr, category, cost, comment, currency }: ISpendSC) {
+	constructor({ idArr, owner, category, cost, comment, currency }: ISpendSC) {
 		this.idArr = idArr
+		this.owner = owner
 		this.category = category
 		this.cost = cost
 		this.comment = comment
@@ -56,9 +58,17 @@ export default class SpendService {
 	 */
 	public async add(): TAddSpend {
 		try {
+			if (!this.owner)
+				return {
+					status: {
+						success: false,
+						message: 'You have to be logged in to insert new spend',
+					},
+				}
 			//Trying to insert new Spend
 			const addedSpend = await Spend.create({
 				_id: new Types.ObjectId(),
+				owner: this.owner,
 				category: this.category,
 				comment: this.comment,
 				cost: this.cost,

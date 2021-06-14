@@ -31,10 +31,10 @@ export default class SpendsController extends Controller {
 	 * @returns {void}
 	 */
 	async handleGet(req: Request, res: Response): Promise<void> {
-		const { idArr } = req.body
-		const spendsService = new SpendService({ idArr })
-
 		try {
+			const { idArr } = req.body
+			const spendsService = new SpendService({ idArr })
+
 			const spends = await spendsService.get()
 
 			res.json(spends)
@@ -53,11 +53,11 @@ export default class SpendsController extends Controller {
 	 * @returns {void}
 	 */
 	async handleAdd(req: Request, res: Response): Promise<void> {
-		const { category, cost, currency, comment } = req.body
-
-		const spendsService = new SpendService({ category, cost, currency, comment })
-
 		try {
+			const { category, cost, currency, comment } = req.body
+
+			const spendsService = new SpendService({ category, owner: req.user?._id, cost, currency, comment })
+
 			const newSpend = await spendsService.add()
 
 			res.json(newSpend)

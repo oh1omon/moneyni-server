@@ -3,6 +3,7 @@ import { ISpendDocument } from '../types'
 
 export const spendSchema: Schema = new Schema({
 	_id: Types.ObjectId,
+	owner: Types.ObjectId,
 	category: {
 		type: String,
 		required: [true, 'Category is needed'],

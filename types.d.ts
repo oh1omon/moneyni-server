@@ -36,6 +36,7 @@ interface IUserInput {
 //Interfaces for Spends
 interface ISpend {
 	_id: Types.ObjectId
+	owner: Types.ObjectId
 	category: string
 	comment: string
 	cost: number
@@ -128,6 +129,7 @@ interface ISpendSC {
 	cost?: number | undefined
 	comment?: string | undefined
 	idArr?: Types.ObjectId[] | undefined
+	owner?: Types.ObjectId | undefined
 }
 
 type TGetSpend = Promise<
