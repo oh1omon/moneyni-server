@@ -1,5 +1,5 @@
 import { model, Model, Schema, Types } from 'mongoose'
-import { IUserDocument } from '../types'
+import { IUserDocument } from '../types/types'
 
 export const UserSchema: Schema = new Schema({
 	_id: Types.ObjectId,

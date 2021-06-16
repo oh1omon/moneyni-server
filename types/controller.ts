@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { IRoute } from '../types'
+import { IRoute } from './types'
 
 export enum Methods {
 	GET = 'GET',

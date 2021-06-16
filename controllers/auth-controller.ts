@@ -2,8 +2,8 @@ import { Response } from 'express'
 import passport from 'passport'
 import { initializePassport } from '../passport/passport-config'
 import UserService from '../services/user-service'
-import { IRoute, Request } from '../types'
-import Controller, { Methods } from '../typings/controller'
+import Controller, { Methods } from '../types/controller'
+import { IRoute, Request } from '../types/types'
 
 export default class AuthController extends Controller {
 	constructor() {

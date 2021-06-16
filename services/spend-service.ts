@@ -1,6 +1,6 @@
 import { Types } from 'mongoose'
 import { Spend } from '../models/spend-schema'
-import { ISpendSC, TAddSpend, TGetSpend } from '../types'
+import { ISpendSC, TAddSpend, TGetSpend } from '../types/types'
 
 export default class SpendService {
 	public readonly idArr: Types.ObjectId[]

@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import UserService from '../services/user-service'
-import { IRoute, Request } from '../types'
-import Controller, { Methods } from '../typings/controller'
+import { IRoute, Request } from '../types/types'
+import Controller, { Methods } from '../types/controller'
 
 export default class UserController extends Controller {
 	constructor() {

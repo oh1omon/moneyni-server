@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import { PassportStatic } from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import UserService from '../services/user-service'
-import { IUser } from '../types'
+import { IUser } from '../types/types'
 
 export const initializePassport = (passport: PassportStatic): void => {
 	const authenticateUser = async (email: string, password: string, done: any) => {

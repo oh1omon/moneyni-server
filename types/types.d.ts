@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { Request as IRequest, Response } from 'express'
 import { Document, Types } from 'mongoose'
-import { Methods } from './typings/controller'
+import { Methods } from './controller'
 
 //Express
 interface Request extends IRequest {

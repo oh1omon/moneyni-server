@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import { User } from '../models/user-schema'
-import { IServiceUser, IUserDocument, IUserUC } from '../types'
+import { IServiceUser, IUserDocument, IUserUC } from '../types/types'
 
 export default class UserService {
 	//User property interface

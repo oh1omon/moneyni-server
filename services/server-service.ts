@@ -1,6 +1,6 @@
 import { Application, RequestHandler } from 'express'
 import http from 'http'
-import Controller from './controller'
+import Controller from '../types/controller'
 
 export default class Server {
 	private app: Application

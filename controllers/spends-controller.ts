@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import SpendService from '../services/spend-service'
-import { IRoute, Request } from '../types'
-import Controller, { Methods } from '../typings/controller'
+import Controller, { Methods } from '../types/controller'
+import { IRoute, Request } from '../types/types'
 
 export default class SpendsController extends Controller {
 	constructor() {
