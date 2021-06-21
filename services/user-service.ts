@@ -90,7 +90,7 @@ export default class UserService {
 	public async updateUser(): Promise<IServiceUser> {
 		try {
 			//Checking password length
-			if (this.user.password.length < 8)
+			if (this.user.password && this.user.password.length < 8)
 				return { status: { success: false, message: 'password should be at least 8 symbols' } }
 
 			const updatedUser = await User.findByIdAndUpdate(
@@ -105,7 +105,10 @@ export default class UserService {
 
 			updatedUser.password = undefined
 
-			return { status: { success: true, message: 'You have successfully updated your profile! ' }, user: updatedUser }
+			return {
+				status: { success: true, message: 'You have successfully updated your profile! ' },
+				user: updatedUser,
+			}
 		} catch (e) {
 			console.log(e)
 

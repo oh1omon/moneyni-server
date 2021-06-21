@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/auth/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
@@ -34,16 +34,16 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/auth/logout
+GET http://localhost:8080/api/auth/logout
 Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/spends/
+POST http://localhost:8080/api/spends/
 Content-Type: application/json
 
 {
-	"idArr":["60c7723ea2aca7192b6b045e","60c77264a2aca7192b6b0461"]
+	"idArr":["60d0959ece4366412f240bf7"]
 }
 
 ###

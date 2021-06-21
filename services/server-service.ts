@@ -26,7 +26,7 @@ export default class Server {
 
 	public loadControllers(controllers: Controller[]): void {
 		controllers.forEach((controller) => {
-			this.app.use(controller.path, controller.setRoutes())
+			this.app.use(`/api${controller.path}`, controller.setRoutes())
 		})
 	}
 }

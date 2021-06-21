@@ -1,7 +1,7 @@
 import { Response } from 'express'
 import UserService from '../services/user-service'
-import { IRoute, Request } from '../types/types'
 import Controller, { Methods } from '../types/controller'
+import { IRoute, Request } from '../types/types'
 
 export default class UserController extends Controller {
 	constructor() {
@@ -56,6 +56,6 @@ export default class UserController extends Controller {
 	 * @returns {void}
 	 */
 	handleRetrieve(req: Request, res: Response): void {
-		res.json({ user: req.user })
+		res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
 	}
 }

@@ -84,7 +84,9 @@ export default class AuthController extends Controller {
 			if (result.status.success) {
 				req.login(result.user, (err) => {
 					if (err) {
-						res.json({ status: { success: false, message: 'Problem in signing you in after signing you up' } })
+						res.json({
+							status: { success: false, message: 'Problem in signing you in after signing you up' },
+						})
 						return
 					}
 					res.json({
@@ -115,9 +117,12 @@ export default class AuthController extends Controller {
 		req.logout()
 		req.session.destroy(function (err) {
 			if (!err) {
-				res.status(200).clearCookie('connect.sid', { path: '/' }).json({ user: req.user })
+				res.status(200)
+					.clearCookie('connect.sid', { path: '/' })
+					.json({ status: { success: true, message: 'You have successfully logged out' } })
 			} else {
 				console.log(err)
+				res.json({ status: { success: false, message: 'Problem logging you out' } })
 			}
 		})
 	}
