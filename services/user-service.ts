@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import mongoose, { Types } from 'mongoose'
+import mongoose from 'mongoose'
 import { User } from '../models/user-schema'
 import { IServiceUser, IUserDocument, IUserUC } from '../types/types'
 
@@ -92,27 +92,6 @@ export default class UserService {
 	public async updateUser(): Promise<IServiceUser> {
 		try {
 			//Checking password length
-			// if (this.user.password && this.user.password.length < 8)
-			// 	return { status: { success: false, message: 'password should be at least 8 symbols' } }
-
-			// const updatedUser = await User.findByIdAndUpdate(
-			// 	this.user.id,
-			// 	await this.updateDataPrep(this.user as { [key: string]: unknown }),
-			// 	{
-			// 		new: true,
-			// 	}
-			// )
-
-			// if (!updatedUser) return { status: { success: false, message: 'No user found to update' } }
-
-			// updatedUser.password = undefined
-
-			// return {
-			// 	status: { success: true, message: 'You have successfully updated your profile! ' },
-			// 	user: updatedUser,
-			// }
-
-			//Checking password length
 			if (this.user.password && this.user.password.length < 8)
 				return { status: { success: false, message: 'password should be at least 8 symbols' } }
 
@@ -152,11 +131,12 @@ export default class UserService {
 	 * @param uncheckedData
 	 * @returns {IUserDocument} updates, but unsaved user document
 	 */
-	private async updateDataPrep(user: IUserDocument, uncheckedData: Record<string, unknown>): Promise<IUserDocument> {
+	private async updateDataPrep(user: IUserDocument, uncheckedData: IUserUC): Promise<IUserDocument> {
 		for (const k in uncheckedData) {
 			//this part is working with spends property
-			if (uncheckedData['spends'] && k === 'spends' && Types.ObjectId.isValid(uncheckedData[k] as string)) {
-				user.spends = [...(user.spends as Types.ObjectId[]), Types.ObjectId(uncheckedData[k] as string)]
+			if (uncheckedData['spends'] && k === 'spends') {
+				console.log(k + uncheckedData[k])
+				user.spends = [...user.spends, uncheckedData[k]]
 				continue
 			}
 
