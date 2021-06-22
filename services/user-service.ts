@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 import { User } from '../models/user-schema'
 import { IServiceUser, IUserDocument, IUserUC } from '../types/types'
 
@@ -11,10 +11,11 @@ export default class UserService {
 		email: null,
 		password: null,
 		spends: null,
+		salary: null,
 	}
 
-	constructor({ id, name, email, password, spends }: IUserUC) {
-		this.user = { id, name, email, password, spends }
+	constructor({ id, name, email, password, spends, salary }: IUserUC) {
+		this.user = { id, name, email, password, spends, salary }
 	}
 
 	/**
@@ -70,6 +71,7 @@ export default class UserService {
 				email: this.user.email,
 				password: hashedPassword,
 				name: this.user.name,
+				salary: { monthly: this.user.salary, actual: this.user.salary },
 				spends: [],
 			})
 
@@ -90,24 +92,52 @@ export default class UserService {
 	public async updateUser(): Promise<IServiceUser> {
 		try {
 			//Checking password length
+			// if (this.user.password && this.user.password.length < 8)
+			// 	return { status: { success: false, message: 'password should be at least 8 symbols' } }
+
+			// const updatedUser = await User.findByIdAndUpdate(
+			// 	this.user.id,
+			// 	await this.updateDataPrep(this.user as { [key: string]: unknown }),
+			// 	{
+			// 		new: true,
+			// 	}
+			// )
+
+			// if (!updatedUser) return { status: { success: false, message: 'No user found to update' } }
+
+			// updatedUser.password = undefined
+
+			// return {
+			// 	status: { success: true, message: 'You have successfully updated your profile! ' },
+			// 	user: updatedUser,
+			// }
+
+			//Checking password length
 			if (this.user.password && this.user.password.length < 8)
 				return { status: { success: false, message: 'password should be at least 8 symbols' } }
 
-			const updatedUser = await User.findByIdAndUpdate(
-				this.user.id,
-				await this.updateDataPrep(this.user as { [key: string]: unknown }),
-				{
-					new: true,
-				}
-			)
+			//Finding user
+			const foundUser = await User.findById(this.user.id)
 
-			if (!updatedUser) return { status: { success: false, message: 'No user found to update' } }
+			//Checking if user has been found
+			if (!foundUser) return { status: { success: false, message: 'No user found to update' } }
 
-			updatedUser.password = undefined
+			//Waiting for user document to be updated, but unsaved
+			const updatedUserDoc = await this.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
 
+			//Finally, saving user to the db
+			const result = await updatedUserDoc.save()
+
+			//Checking if there is any problems saving user
+			if (!result) return { status: { success: false, message: 'Problem updating user' } }
+
+			//Nulling the password field
+			result.password = undefined
+
+			//Returning status and user objects
 			return {
 				status: { success: true, message: 'You have successfully updated your profile! ' },
-				user: updatedUser,
+				user: result,
 			}
 		} catch (e) {
 			console.log(e)
@@ -117,33 +147,42 @@ export default class UserService {
 	}
 
 	/**
-	 * This method is going to prepare data for update method
-	 * It will delete null-ish fields and will transform spends field to $push field
+	 * This method is combining user document with updates
+	 * @param user
 	 * @param uncheckedData
-	 * @returns {object} with checked data
+	 * @returns {IUserDocument} updates, but unsaved user document
 	 */
-	private async updateDataPrep(uncheckedData: Record<string, unknown>) {
-		const acc: Record<string, unknown> = {}
+	private async updateDataPrep(user: IUserDocument, uncheckedData: Record<string, unknown>): Promise<IUserDocument> {
 		for (const k in uncheckedData) {
 			//this part is working with spends property
-			if (uncheckedData['spends'] && k === 'spends') {
-				acc.$push = { spends: uncheckedData[k] }
+			if (uncheckedData['spends'] && k === 'spends' && Types.ObjectId.isValid(uncheckedData[k] as string)) {
+				user.spends = [...(user.spends as Types.ObjectId[]), Types.ObjectId(uncheckedData[k] as string)]
 				continue
 			}
 
 			//This function crypting password
 			if (uncheckedData['password'] && k === 'password') {
 				const password = await bcrypt.hash(uncheckedData[k], 10)
-				acc[k] = password
+				user.password = password
 				continue
 			}
 
-			//All other properties will be added, excluding id
-			if (uncheckedData[k] && k !== 'id') {
-				acc[k] = uncheckedData[k]
+			//This function is to convert salary field into salary object
+			if (uncheckedData['salary'] && k === 'salary') {
+				Object.assign(user.salary, uncheckedData[k])
+				// user.salary = {
+				// 	actual: (uncheckedData[k] as number) - (user.salary.monthly - user.salary.actual),
+				// 	monthly: uncheckedData[k] as number,
+				// }
+
+				continue
+			}
+
+			if (uncheckedData['name'] && k === 'name') {
+				user.name = uncheckedData[k] as string
 			}
 		}
 
-		return acc
+		return user
 	}
 }

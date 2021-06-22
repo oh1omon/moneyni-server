@@ -61,6 +61,7 @@ export default class AuthController extends Controller {
 						email: user.email,
 						name: user.name,
 						spends: user.spends,
+						salary: user.salary,
 					},
 				})
 				return
@@ -96,6 +97,7 @@ export default class AuthController extends Controller {
 							email: result.user.email,
 							name: result.user.name,
 							spends: result.user.spends,
+							salary: result.user.salary,
 						},
 					})
 					return

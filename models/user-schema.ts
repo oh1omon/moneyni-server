@@ -24,6 +24,17 @@ export const UserSchema: Schema = new Schema({
 		minLength: [2, 'Your name should not be shorter then 2 symbols'],
 		maxLength: [20, 'Your name should not be longer then 20 symbols'],
 	},
+	salary: {
+		monthly: {
+			type: Number,
+			required: [true, 'Your salary is required'],
+			min: [2, 'Your salary should not be shorter then 2 symbols'],
+			max: [300_000, 'Your salary should not be longer then 20 symbols'],
+		},
+		actual: {
+			type: Number,
+		},
+	},
 	spends: [Types.ObjectId],
 })
 

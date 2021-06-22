@@ -40,9 +40,9 @@ export default class UserController extends Controller {
 			return
 		}
 
-		const { name, password, spends } = req.body
+		const { name, password, spends, salary } = req.body
 
-		const userService = new UserService({ id: req.user?.id, name, password, spends })
+		const userService = new UserService({ id: req.user?.id, name, password, spends, salary })
 
 		const result = await userService.updateUser()
 
@@ -56,6 +56,10 @@ export default class UserController extends Controller {
 	 * @returns {void}
 	 */
 	handleRetrieve(req: Request, res: Response): void {
-		res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
+		if (req.user) {
+			res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
+			return
+		}
+		res.json({ status: { success: false, message: 'You are not authenticated' } })
 	}
 }

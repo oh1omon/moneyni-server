@@ -21,6 +21,10 @@ interface IUser {
 	email: string
 	password: string
 	name: string
+	salary: {
+		monthly: number
+		actual: number
+	}
 	spends: [] | Types.ObjectId[]
 }
 
@@ -31,6 +35,7 @@ interface IUserInput {
 	email?: IUser['email']
 	password?: IUser['password']
 	name?: IUser['name']
+	salary?: number
 }
 
 //Interfaces for Spends
@@ -109,18 +114,13 @@ interface ISignUpValProps extends ISignInValProps {
 
 //UserService
 
-interface IUpdates {
-	password?: string
-	name?: string
-	spends?: Types.ObjectId
-}
-
 interface IUserUC {
 	name?: string | null
 	id?: string | null
 	password?: string | null
 	email?: string | null
 	spends?: Types.ObjectId | null
+	salary?: { monthly?: number; actual?: number }
 }
 
 interface ISpendSC {
