@@ -135,7 +135,6 @@ export default class UserService {
 		for (const k in uncheckedData) {
 			//this part is working with spends property
 			if (uncheckedData['spends'] && k === 'spends') {
-				console.log(k + uncheckedData[k])
 				user.spends = [...user.spends, uncheckedData[k]]
 				continue
 			}
@@ -150,10 +149,6 @@ export default class UserService {
 			//This function is to convert salary field into salary object
 			if (uncheckedData['salary'] && k === 'salary') {
 				Object.assign(user.salary, uncheckedData[k])
-				// user.salary = {
-				// 	actual: (uncheckedData[k] as number) - (user.salary.monthly - user.salary.actual),
-				// 	monthly: uncheckedData[k] as number,
-				// }
 
 				continue
 			}
