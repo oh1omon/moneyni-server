@@ -32,11 +32,11 @@ export default class UserController extends Controller {
 	 */
 	async handleUpdate(req: Request, res: Response): Promise<void> {
 		if (!req.body) {
-			res.json({ message: 'you need to submit something' })
+			res.json({ success: false, message: 'Error in field everywhere: You need to submit something' })
 		}
 
 		if (!req.user) {
-			res.json({ message: 'you need to be logged in to proceed' })
+			res.json({ success: false, message: 'Error in field user: You need to be logged in to proceed' })
 			return
 		}
 
@@ -60,6 +60,6 @@ export default class UserController extends Controller {
 			res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
 			return
 		}
-		res.json({ status: { success: false, message: 'You are not authenticated' } })
+		res.json({ status: { success: false, message: 'Error in field user: You are not authenticated' } })
 	}
 }

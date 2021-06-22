@@ -29,7 +29,7 @@ export default class SpendService {
 				return {
 					status: {
 						success: false,
-						message: 'You have to be logged in to fetch your spends',
+						message: "Error, you aren't logged: You have to be logged in to fetch your spends",
 					},
 				}
 			// We are trying to find spends, by ids passed int o class constructor
@@ -52,7 +52,7 @@ export default class SpendService {
 			return {
 				status: {
 					success: false,
-					message: 'Internal error has happened, please try again later',
+					message: 'Error in internal processes: Internal error has happened, please try again later',
 				},
 			}
 		}
@@ -70,7 +70,7 @@ export default class SpendService {
 				return {
 					status: {
 						success: false,
-						message: 'You have to be logged in to insert new spend',
+						message: "Error, you aren't logged: You have to be logged in to insert new spend",
 					},
 				}
 			//Trying to insert new Spend

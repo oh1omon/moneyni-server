@@ -55,12 +55,22 @@ export default class UserService {
 			//Checking if user already exists in DB
 			const foundUser = await this.findUserByEmail()
 			if (foundUser) {
-				return { status: { success: false, message: 'there is an account with this email already' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field email: There is an account with this email already',
+					},
+				}
 			}
 
 			//Checking password length
 			if (this.user.password.length < 8)
-				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field password: Password should be at least 8 symbols',
+					},
+				}
 
 			//Hashing password
 			const hashedPassword: string = await bcrypt.hash(this.user.password, 10)
@@ -93,13 +103,19 @@ export default class UserService {
 		try {
 			//Checking password length
 			if (this.user.password && this.user.password.length < 8)
-				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field password: Password should be at least 8 symbols',
+					},
+				}
 
 			//Finding user
 			const foundUser = await User.findById(this.user.id)
 
 			//Checking if user has been found
-			if (!foundUser) return { status: { success: false, message: 'No user found to update' } }
+			if (!foundUser)
+				return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
 			//Waiting for user document to be updated, but unsaved
 			const updatedUserDoc = await this.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
@@ -108,7 +124,8 @@ export default class UserService {
 			const result = await updatedUserDoc.save()
 
 			//Checking if there is any problems saving user
-			if (!result) return { status: { success: false, message: 'Problem updating user' } }
+			if (!result)
+				return { status: { success: false, message: 'Error in internal processes: Problem updating user' } }
 
 			//Nulling the password field
 			result.password = undefined
