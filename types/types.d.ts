@@ -71,6 +71,8 @@ interface IMonth {
 	}
 }
 
+type IMonthDocument = IMonth & Document
+
 interface IMessage {
 	success: boolean
 	message: string
@@ -143,7 +145,14 @@ interface ISpendSC {
 	comment?: string | undefined
 	idArr?: Types.ObjectId[] | undefined
 	owner?: Types.ObjectId | undefined
-	month?: Types.ObjectId | undefined
+}
+
+interface IMonthSC {
+	idArr?: Types.ObjectId[] | undefined
+	owner?: Types.ObjectId | undefined
+	month?: number | undefined
+	spends?: Types.ObjectId[] | null
+	salary?: { monthly?: number; actual?: number }
 }
 
 type TGetSpend = Promise<
@@ -154,7 +163,20 @@ type TGetSpend = Promise<
 	| { status: { success: boolean; message: string }; spends?: undefined }
 >
 
+type TGetMonth = Promise<
+	| {
+			status: { success: boolean; message: string }
+			months: IMonthDocument[]
+	  }
+	| { status: { success: boolean; message: string }; months?: undefined }
+>
+
 type TAddSpend = Promise<
 	| { status: { success: boolean; message: string }; spends: ISpendDocument }
 	| { status: { success: boolean; message: string }; spends?: undefined }
+>
+
+type TAddMonth = Promise<
+	| { status: { success: boolean; message: string }; month: IMonthDocument }
+	| { status: { success: boolean; message: string }; month?: undefined }
 >

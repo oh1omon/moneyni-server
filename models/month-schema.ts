@@ -15,6 +15,7 @@ export const monthSchema: Schema = new Schema({
 		},
 		actual: {
 			type: Number,
+			required: true,
 		},
 	},
 })

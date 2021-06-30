@@ -9,16 +9,14 @@ export default class SpendService {
 	public readonly cost: number
 	public readonly comment: string
 	public readonly currency: string
-	public readonly month: Types.ObjectId
 
-	constructor({ idArr, owner, category, cost, comment, currency, month }: ISpendSC) {
+	constructor({ idArr, owner, category, cost, comment, currency }: ISpendSC) {
 		this.idArr = idArr
 		this.owner = owner
 		this.category = category
 		this.cost = cost
 		this.comment = comment
 		this.currency = currency
-		this.month = month
 	}
 
 	/**
@@ -34,6 +32,7 @@ export default class SpendService {
 						message: "Error, you aren't logged: You have to be logged in to fetch your spends",
 					},
 				}
+
 			// We are trying to find spends, by ids passed int o class constructor
 			const foundDocs = await Spend.find({
 				_id: { $in: this.idArr },
