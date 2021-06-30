@@ -58,6 +58,19 @@ interface ISpendInput {
 	currency: ISpend['currency']
 }
 
+// Interface for Month schema
+
+interface IMonth {
+	_id: Types.ObjectId
+	owner: Types.ObjectId
+	month: number
+	spends: Types.ObjectId[]
+	salary: {
+		monthly: number
+		actual: number
+	}
+}
+
 interface IMessage {
 	success: boolean
 	message: string
@@ -130,6 +143,7 @@ interface ISpendSC {
 	comment?: string | undefined
 	idArr?: Types.ObjectId[] | undefined
 	owner?: Types.ObjectId | undefined
+	month?: Types.ObjectId | undefined
 }
 
 type TGetSpend = Promise<

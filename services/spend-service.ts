@@ -9,14 +9,16 @@ export default class SpendService {
 	public readonly cost: number
 	public readonly comment: string
 	public readonly currency: string
+	public readonly month: Types.ObjectId
 
-	constructor({ idArr, owner, category, cost, comment, currency }: ISpendSC) {
+	constructor({ idArr, owner, category, cost, comment, currency, month }: ISpendSC) {
 		this.idArr = idArr
 		this.owner = owner
 		this.category = category
 		this.cost = cost
 		this.comment = comment
 		this.currency = currency
+		this.month = month
 	}
 
 	/**
