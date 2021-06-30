@@ -114,8 +114,7 @@ export default class UserService {
 			const foundUser = await User.findById(this.user.id)
 
 			//Checking if user has been found
-			if (!foundUser)
-				return { status: { success: false, message: 'Error in field user: No user found to update' } }
+			if (!foundUser) return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
 			//Waiting for user document to be updated, but unsaved
 			const updatedUserDoc = await this.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
@@ -124,8 +123,7 @@ export default class UserService {
 			const result = await updatedUserDoc.save()
 
 			//Checking if there is any problems saving user
-			if (!result)
-				return { status: { success: false, message: 'Error in internal processes: Problem updating user' } }
+			if (!result) return { status: { success: false, message: 'Error in internal processes: Problem updating user' } }
 
 			//Nulling the password field
 			result.password = undefined

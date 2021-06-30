@@ -13,7 +13,7 @@ dotenv.config()
 
 const app: Application = express()
 
-// //Extracting PORT & HOST variables from .env file
+//Extracting PORT & HOST variables from .env file
 const PORT: number = parseInt(process.env.PORT as string, 10)
 
 //Initializing Server class and passing there app instance and port number
