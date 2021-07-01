@@ -2,6 +2,7 @@ import { Response } from 'express'
 import SpendService from '../services/spend-service'
 import Controller, { Methods } from '../types/controller'
 import { IRoute, Request } from '../types/types'
+import MonthService from '../services/month-service'
 
 export default class SpendsController extends Controller {
 	constructor() {
@@ -32,12 +33,32 @@ export default class SpendsController extends Controller {
 	 */
 	async handleGet(req: Request, res: Response): Promise<void> {
 		try {
-			const { idArr } = req.body
+			const { month } = req.body
+
+			let monthData,
+				{ idArr } = req.body
+
+			if (month) {
+				const monthService = new MonthService({ month, owner: req.body?._id })
+
+				const response = await monthService.get()
+
+				if (!response.status.success) {
+					res.json(response)
+
+					return
+				}
+
+				idArr = response.months[0].spends
+
+				monthData = { month: response.months[0].month, salary: response.months[0].salary }
+			}
+
 			const spendsService = new SpendService({ idArr, owner: req.user?._id })
 
 			const spends = await spendsService.get()
 
-			res.json(spends)
+			res.json({ ...spends, monthData })
 		} catch (e) {
 			console.log(e)
 

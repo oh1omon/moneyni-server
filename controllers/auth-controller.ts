@@ -8,11 +8,10 @@ import { IRoute, Request } from '../types/types'
 export default class AuthController extends Controller {
 	constructor() {
 		super()
+		initializePassport(passport)
 	}
 
 	path = '/auth'
-
-	passport = initializePassport(passport)
 
 	routes: IRoute[] = [
 		{
