@@ -180,3 +180,8 @@ type TAddMonth = Promise<
 	| { status: { success: boolean; message: string }; month: IMonthDocument }
 	| { status: { success: boolean; message: string }; month?: undefined }
 >
+
+type TJobs = {
+	cronSchedule: string
+	cb: () => void
+}[]

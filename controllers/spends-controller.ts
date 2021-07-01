@@ -33,22 +33,27 @@ export default class SpendsController extends Controller {
 	 */
 	async handleGet(req: Request, res: Response): Promise<void> {
 		try {
+			// Getting month in case of user wants to fetch his spends for some old month
 			const { month } = req.body
 
+			// Declaring monthData and idArr from req.body
 			let monthData,
 				{ idArr } = req.body
 
+			// Checking if user has passed month number
 			if (month) {
 				const monthService = new MonthService({ month, owner: req.body?._id })
 
 				const response = await monthService.get()
 
+				//If no spends were found in the month he has decided to fetch we just respond to him with the message about it
 				if (!response.status.success) {
 					res.json(response)
 
 					return
 				}
 
+				// If spends were successfully fetched from the month user has provided, then we will change assign those spends to idArr
 				idArr = response.months[0].spends
 
 				monthData = { month: response.months[0].month, salary: response.months[0].salary }

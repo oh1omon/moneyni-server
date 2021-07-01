@@ -82,13 +82,6 @@ export default class MonthService {
 	 */
 	public async add(): TAddMonth {
 		try {
-			if (!this.owner)
-				return {
-					status: {
-						success: false,
-						message: "Error, you aren't logged: You have to be logged in to insert new spend",
-					},
-				}
 			//Trying to insert new Month
 			const addedMonth = await Month.create({
 				_id: new Types.ObjectId(),
@@ -113,7 +106,7 @@ export default class MonthService {
 			return {
 				status: {
 					success: false,
-					message: e.message,
+					message: `userId: ${this.owner}, error: ${e.message}`,
 				},
 			}
 		}

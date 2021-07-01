@@ -20,7 +20,6 @@ export default class UserService {
 
 	/**
 	 * Method performs searching database with id passed into function, and returns found doc, or empty object
-	 * @param id string
 	 */
 	public async findUserById(): Promise<IUserDocument | null> {
 		try {
@@ -34,7 +33,6 @@ export default class UserService {
 
 	/**
 	 * Method performs searching database with email passed into function, and returns found doc, or empty object
-	 * @param email string
 	 */
 	public async findUserByEmail(): Promise<IUserDocument | null> {
 		try {
@@ -48,7 +46,7 @@ export default class UserService {
 
 	/**
 	 * Method check if user already registered or not and then creates, or not creates a new user
-	 * @returns {Promise<ICreateNewUser>}
+	 * @returns {Promise<IServiceUser>}
 	 */
 	public async createNewUser(): Promise<IServiceUser> {
 		try {
@@ -95,8 +93,6 @@ export default class UserService {
 
 	/**
 	 * This method is used for adding spends or just updating the user
-	 * @param userId
-	 * @param updates
 	 * @returns
 	 */
 	public async updateUser(): Promise<IServiceUser> {
@@ -117,7 +113,7 @@ export default class UserService {
 			if (!foundUser) return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
 			//Waiting for user document to be updated, but unsaved
-			const updatedUserDoc = await this.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
+			const updatedUserDoc = await UserService.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
 
 			//Finally, saving user to the db
 			const result = await updatedUserDoc.save()
@@ -146,7 +142,7 @@ export default class UserService {
 	 * @param uncheckedData
 	 * @returns {IUserDocument} updates, but unsaved user document
 	 */
-	private async updateDataPrep(user: IUserDocument, uncheckedData: IUserUC): Promise<IUserDocument> {
+	private static async updateDataPrep(user: IUserDocument, uncheckedData: IUserUC): Promise<IUserDocument> {
 		for (const k in uncheckedData) {
 			//this part is working with spends property
 			if (uncheckedData['spends'] && k === 'spends') {
