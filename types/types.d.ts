@@ -26,6 +26,7 @@ interface IUser {
 		actual: number
 	}
 	spends: [] | Types.ObjectId[]
+	months: { month: number; id: Types.ObjectId }[]
 }
 
 type IUserDocument = IUser & Document
@@ -182,6 +183,6 @@ type TAddMonth = Promise<
 >
 
 type TJobs = {
-	cronSchedule: string
+	interval: string
 	cb: () => void
 }[]

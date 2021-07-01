@@ -10,9 +10,7 @@ import UserController from './controllers/user-controller'
 import DbService from './services/db-service'
 import Server from './services/server-service'
 import schedule from 'node-schedule'
-import { User } from './models/user-schema'
-import { Month } from './models/month-schema'
-import MonthService from './services/month-service'
+import MonthlyNullify from './services/monthly-nullify'
 dotenv.config()
 
 const app: Application = express()
@@ -47,34 +45,17 @@ const globalMiddleware = [
 
 const controllers = [new AuthController(), new SpendsController(), new UserController()]
 
-Promise.resolve().then(() => {
+try {
 	server.loadMiddleware(globalMiddleware)
 	db.connect()
 	server.loadControllers(controllers)
 	server.loadJobs([
 		{
-			cronSchedule: '1 0 1 * *',
-			cb: () => {
-				User.find({}, (err, users) => {
-					if (err) {
-						console.log(err)
-						return
-					}
-					users.forEach(async (u) => {
-						const { salary, spends, _id } = u
-						const monthService = new MonthService({ owner: _id, salary, spends })
-						const response = await monthService.add()
-
-						if (response.status.success) {
-							//TODO
-							return
-						}
-
-						console.log(response)
-					})
-				})
-			},
+			interval: MonthlyNullify.interval,
+			cb: MonthlyNullify.callback,
 		},
 	])
 	server.run()
-})
+} catch (e) {
+	console.log(e)
+}

@@ -81,6 +81,7 @@ export default class UserService {
 				name: this.user.name,
 				salary: { monthly: this.user.salary, actual: this.user.salary },
 				spends: [],
+				months: [],
 			})
 
 			return { status: { success: true, message: 'You have been successfully sign up ' }, user: injectedUser }

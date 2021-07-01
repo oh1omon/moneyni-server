@@ -36,6 +36,12 @@ export const UserSchema: Schema = new Schema({
 		},
 	},
 	spends: [Types.ObjectId],
+	months: [
+		{
+			month: { type: Number, min: 0, max: 11, required: true },
+			id: { type: Types.ObjectId, required: true },
+		},
+	],
 })
 
 export const User: Model<IUserDocument> = model<IUserDocument>('User', UserSchema)

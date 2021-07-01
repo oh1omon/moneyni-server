@@ -35,6 +35,6 @@ export default class Server {
 	}
 
 	public loadJobs(jobs: TJobs): void {
-		jobs.forEach((j) => this.schedule(j.cronSchedule, j.cb))
+		jobs.forEach((j) => this.schedule(j.interval, j.cb))
 	}
 }
