@@ -3,14 +3,14 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import session from 'express-session'
+import schedule from 'node-schedule'
 import passport from 'passport'
 import AuthController from './controllers/auth-controller'
 import SpendsController from './controllers/spends-controller'
 import UserController from './controllers/user-controller'
 import DbService from './services/db-service'
-import Server from './services/server-service'
-import schedule from 'node-schedule'
 import MonthlyNullify from './services/monthly-nullify'
+import Server from './services/server-service'
 dotenv.config()
 
 const app: Application = express()

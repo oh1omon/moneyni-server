@@ -1,8 +1,8 @@
 import { Response } from 'express'
+import MonthService from '../services/month-service'
 import SpendService from '../services/spend-service'
 import Controller, { Methods } from '../types/controller'
 import { IRoute, Request } from '../types/types'
-import MonthService from '../services/month-service'
 
 export default class SpendsController extends Controller {
 	constructor() {
@@ -42,7 +42,7 @@ export default class SpendsController extends Controller {
 
 			// Checking if user has passed month number
 			if (month) {
-				const monthService = new MonthService({ month, owner: req.body?._id })
+				const monthService = new MonthService({ month, owner: req.user?._id })
 
 				const response = await monthService.get()
 
@@ -53,10 +53,17 @@ export default class SpendsController extends Controller {
 					return
 				}
 
+				// If user does not have any spends in the month then we will return unsuccessful response
+				if (!response.months[0]) {
+					res.json({
+						status: { success: false, message: 'Error in finding spends: You have no spends in this month' },
+					})
+					return
+				}
 				// If spends were successfully fetched from the month user has provided, then we will change assign those spends to idArr
 				idArr = response.months[0].spends
 
-				monthData = { month: response.months[0].month, salary: response.months[0].salary }
+				monthData = { month: response.months[0].month, salary: response.months[0].salary, spends: response.months[0].spends }
 			}
 
 			const spendsService = new SpendService({ idArr, owner: req.user?._id })

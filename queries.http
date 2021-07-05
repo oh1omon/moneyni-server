@@ -46,7 +46,7 @@ POST http://localhost:8080/api/spends/
 Content-Type: application/json
 
 {
-	"idArr":["60d0959ece4366412f240bf7"]
+  "month": 1
 }
 
 ###
