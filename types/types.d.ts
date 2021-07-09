@@ -31,14 +31,6 @@ interface IUser {
 
 type IUserDocument = IUser & Document
 
-//Interface for data coming from client side
-interface IUserInput {
-	email?: IUser['email']
-	password?: IUser['password']
-	name?: IUser['name']
-	salary?: number
-}
-
 //Interfaces for Spends
 interface ISpend {
 	_id: Types.ObjectId
@@ -50,14 +42,6 @@ interface ISpend {
 }
 
 type ISpendDocument = ISpend & Document
-
-//Interface for data coming from client side
-interface ISpendInput {
-	category: ISpend['category']
-	comment?: ISpend['comment']
-	cost: ISpend['cost']
-	currency: ISpend['currency']
-}
 
 // Interface for Month schema
 
@@ -81,51 +65,6 @@ interface IMessage {
 interface IServiceUser {
 	status: IMessage
 	user?: IUserDocument
-}
-
-type TGetUserByEmail = (email: string) => Promise<IUserDocument | Record<string, never>>
-
-type TGetUserById = (id: string) => Promise<IUserDocument | Record<string, never>>
-
-type TCreateNewUser = (newUser: IUserInput) => Promise<IUserDocument>
-
-type TGetSpendsById = (idArr: Types.ObjectId[] | []) => Promise<ISpendDocument | ISpendDocument[] | string>
-
-type TAddNewSpend = (newSpend: ISpendInput) => Promise<ISpendDocument | string>
-
-type TAddNewSpendToUser = (userId: Types.ObjectId, newSpend: Types.ObjectId) => Promise<IUserDocument | string>
-
-type IAddSpendToUserValidator = (newSpend: IAddSpendToUserValProps) => boolean
-
-interface IAddSpendToUserValProps {
-	userId: Types.ObjectId
-	newSpendId: Types.ObjectId
-}
-
-type IAddSpendValidator = (newSpend: IAddSpendValProps) => boolean
-
-interface IAddSpendValProps {
-	category?: string
-	comment?: string
-	cost?: number
-	currency?: string
-}
-
-type IGetSpendsValidator = (newSpend: IGetSpendsValProps) => boolean
-
-type IGetSpendsValProps = Types.ObjectId[]
-
-type ISignInValidator = (signInData: ISignInValProps) => boolean
-
-interface ISignInValProps {
-	email?: string
-	password?: string
-}
-
-type ISignUpValidator = (signUpData: ISignUpValProps) => boolean
-
-interface ISignUpValProps extends ISignInValProps {
-	name?: string
 }
 
 //UserService
