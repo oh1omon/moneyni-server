@@ -7,14 +7,14 @@ export default class MonthService {
 	public readonly owner: Types.ObjectId
 	public readonly month: number
 	public readonly balance: { current?: number; spent?: number; income?: number }
-	public readonly spends: Types.ObjectId[] | null
+	public readonly operations: Types.ObjectId[] | null
 
-	constructor({ idArr, owner, month, balance, spends }: IMonthSC) {
+	constructor({ idArr, owner, month, balance, operations }: IMonthSC) {
 		this.idArr = idArr
 		this.owner = owner
 		this.month = month
 		this.balance = balance
-		this.spends = spends
+		this.operations = operations
 	}
 
 	/**
@@ -50,11 +50,11 @@ export default class MonthService {
 				return {
 					status: {
 						success: false,
-						message: "Error, you don't haveMonths: No spends found in this month",
+						message: "Error, you don't haveMonths: No operations found in this month",
 					},
 				}
 
-			// Then we are returning object with status object and spends array
+			// Then we are returning object with status object and operations array
 			return {
 				status: {
 					success: true,
@@ -88,7 +88,7 @@ export default class MonthService {
 				owner: this.owner,
 				//Since we are running new month creation process after 00:00 so we wil need last month, that is why we are not adding +1 to the value returned from getMonth method
 				month: new Date().getMonth(),
-				spends: this.spends,
+				operations: this.operations,
 				balance: this.balance,
 			})
 

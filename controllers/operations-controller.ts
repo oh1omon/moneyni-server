@@ -1,15 +1,15 @@
 import { Response } from 'express'
 import MonthService from '../services/month-service'
-import SpendService from '../services/spend-service'
+import OperationService from '../services/operation-service'
 import Controller, { Methods } from '../types/controller'
 import { IRoute, Request } from '../types/types'
 
-export default class SpendsController extends Controller {
+export default class OperationsController extends Controller {
 	constructor() {
 		super()
 	}
 
-	path = '/spends'
+	path = '/operations'
 
 	routes: IRoute[] = [
 		{
@@ -25,15 +25,15 @@ export default class SpendsController extends Controller {
 	]
 
 	/**
-	 * This method calls spends getter function.
-	 * After that, this handler responses to the client part according to result of spends getter function
+	 * This method calls operations getter function.
+	 * After that, this handler responses to the client part according to result of operations getter function
 	 * @param req
 	 * @param res
 	 * @returns {void}
 	 */
 	async handleGet(req: Request, res: Response): Promise<void> {
 		try {
-			// Getting month in case of user wants to fetch his spends for some old month
+			// Getting month in case of user wants to fetch his operations for some old month
 			const { month } = req.body
 
 			// Declaring monthData and idArr from req.body
@@ -46,38 +46,41 @@ export default class SpendsController extends Controller {
 
 				const response = await monthService.get()
 
-				//If no spends were found in the month he has decided to fetch we just respond to him with the message about it
+				//If no operations were found in the month he has decided to fetch we just respond to him with the
+				// message
+				// about it
 				if (!response.status.success) {
 					res.json(response)
 
 					return
 				}
 
-				// If user does not have any spends in the month then we will return unsuccessful response
+				// If user does not have any operations in the month then we will return unsuccessful response
 				if (!response.months[0]) {
 					res.json({
 						status: {
 							success: false,
-							message: 'Error in finding spends: You have no spends in this month',
+							message: 'Error in finding operations: You have no operations in this month',
 						},
 					})
 					return
 				}
-				// If spends were successfully fetched from the month user has provided, then we will change assign those spends to idArr
-				idArr = response.months[0].spends
+				// If operations were successfully fetched from the month user has provided, then we will change assign
+				// those operations to idArr
+				idArr = response.months[0].operations
 
 				monthData = {
 					month: response.months[0].month,
 					balance: response.months[0].balance,
-					spends: response.months[0].spends,
+					operations: response.months[0].operations,
 				}
 			}
 
-			const spendsService = new SpendService({ idArr, owner: req.user?._id })
+			const operationService = new OperationService({ idArr, owner: req.user?._id })
 
-			const spends = await spendsService.get()
+			const operations = await operationService.get()
 
-			res.json({ ...spends, monthData })
+			res.json({ ...operations, monthData })
 		} catch (e) {
 			console.log(e)
 
@@ -91,8 +94,8 @@ export default class SpendsController extends Controller {
 	}
 
 	/**
-	 * This method calls spends adding function.
-	 * After that, this handler responses to the client part according to result of spends adding function
+	 * This method calls operation adding function.
+	 * After that, this handler responses to the client part according to result of operation adding function
 	 * @param req
 	 * @param res
 	 * @returns {void}
@@ -101,11 +104,17 @@ export default class SpendsController extends Controller {
 		try {
 			const { category, cost, currency, comment } = req.body
 
-			const spendsService = new SpendService({ category, owner: req.user?._id, cost, currency, comment })
+			const operationService = new OperationService({
+				category,
+				owner: req.user?._id,
+				cost,
+				currency,
+				comment,
+			})
 
-			const newSpend = await spendsService.add()
+			const newOperation = await operationService.add()
 
-			res.json(newSpend)
+			res.json(newOperation)
 		} catch (e) {
 			console.log(e)
 

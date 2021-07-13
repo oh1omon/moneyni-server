@@ -1,7 +1,7 @@
 import { model, Model, Schema, Types } from 'mongoose'
-import { ISpendDocument } from '../types/types'
+import { IOperationDocument } from '../types/types'
 
-export const spendSchema: Schema = new Schema({
+export const operationSchema: Schema = new Schema({
 	_id: Types.ObjectId,
 	owner: Types.ObjectId,
 	category: {
@@ -9,13 +9,18 @@ export const spendSchema: Schema = new Schema({
 		required: [true, 'Category is needed'],
 		enum: {
 			values: [
+				// Adding funds
+				'Salary',
+				'Gift',
+
+				// Removing funds
 				'Bad Habits',
 				'Hygiene and Health',
 				'Housing',
 				'Clothing and Cosmetics',
 				'Travel',
 				'Food',
-				'Entertainment and Gifts',
+				'Entertainment',
 				'Connection',
 			],
 			message: '{VALUE} is not supported as spend type',
@@ -33,4 +38,4 @@ export const spendSchema: Schema = new Schema({
 	},
 })
 
-export const Spend: Model<ISpendDocument> = model<ISpendDocument>('Spend', spendSchema)
+export const Operation: Model<IOperationDocument> = model<IOperationDocument>('Operation', operationSchema)

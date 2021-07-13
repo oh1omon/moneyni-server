@@ -26,14 +26,14 @@ interface IUser {
 		spent: number
 		income: number
 	}
-	spends: [] | Types.ObjectId[]
+	operations: [] | Types.ObjectId[]
 	months: { month: number; id: Types.ObjectId }[]
 }
 
 type IUserDocument = IUser & Document
 
 //Interfaces for Spends
-interface ISpend {
+interface IOperation {
 	_id: Types.ObjectId
 	owner: Types.ObjectId
 	category: string
@@ -42,7 +42,7 @@ interface ISpend {
 	currency: string
 }
 
-type ISpendDocument = ISpend & Document
+type IOperationDocument = IOperation & Document
 
 // Interface for Month schema
 
@@ -50,7 +50,7 @@ interface IMonth {
 	_id: Types.ObjectId
 	owner: Types.ObjectId
 	month: number
-	spends: Types.ObjectId[]
+	operations: Types.ObjectId[]
 	balance: {
 		current: number
 		spent: number
@@ -76,7 +76,7 @@ interface IUserUC {
 	id?: string | null
 	password?: string | null
 	email?: string | null
-	spends?: Types.ObjectId | null
+	operations?: Types.ObjectId | null
 	balance?: {
 		current: number
 		spent: number
@@ -84,7 +84,7 @@ interface IUserUC {
 	}
 }
 
-interface ISpendSC {
+interface IOperationSC {
 	category?: string | undefined
 	currency?: string | undefined
 	cost?: number | undefined
@@ -97,7 +97,7 @@ interface IMonthSC {
 	idArr?: Types.ObjectId[] | undefined
 	owner?: Types.ObjectId | undefined
 	month?: number | undefined
-	spends?: Types.ObjectId[] | null
+	operations?: Types.ObjectId[] | null
 	balance?: {
 		current: number
 		spent: number
@@ -105,12 +105,12 @@ interface IMonthSC {
 	}
 }
 
-type TGetSpend = Promise<
+type TGetOperation = Promise<
 	| {
 			status: { success: boolean; message: string }
-			spends: ISpendDocument[]
+			operations: IOperationDocument[]
 	  }
-	| { status: { success: boolean; message: string }; spends?: undefined }
+	| { status: { success: boolean; message: string }; operations?: undefined }
 >
 
 type TGetMonth = Promise<
@@ -121,9 +121,9 @@ type TGetMonth = Promise<
 	| { status: { success: boolean; message: string }; months?: undefined }
 >
 
-type TAddSpend = Promise<
-	| { status: { success: boolean; message: string }; spends: ISpendDocument }
-	| { status: { success: boolean; message: string }; spends?: undefined }
+type TAddOperation = Promise<
+	| { status: { success: boolean; message: string }; operation: IOperationDocument }
+	| { status: { success: boolean; message: string }; operation?: undefined }
 >
 
 type TAddMonth = Promise<

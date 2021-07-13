@@ -21,17 +21,17 @@ export default class MonthlyNullify extends ScheduleWorker {
 			// For every user we will do some actions
 			users.forEach(async (u) => {
 				// Destructuring needed data from user document
-				const { balance, spends, _id } = u
+				const { balance, operations, _id } = u
 
 				// Initializing MonthService
-				const monthService = new MonthService({ owner: _id, balance, spends })
+				const monthService = new MonthService({ owner: _id, balance, operations })
 
 				// Trying to create a new Month document
 				const response = await monthService.add()
 
 				// In case of success we will nullify spends array, actual salary and then add month record to users document
 				if (response.status.success) {
-					u.spends = []
+					u.operations = []
 					u.balance = { current: 0, income: 0, spent: 0 }
 					u.months.push({ month: new Date().getMonth(), id: response.month._id })
 

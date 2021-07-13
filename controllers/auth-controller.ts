@@ -66,7 +66,7 @@ export default class AuthController extends Controller {
 						_id: user._id,
 						email: user.email,
 						name: user.name,
-						spends: user.spends,
+						operations: user.operations,
 						balance: user.balance,
 					},
 				})
@@ -106,7 +106,7 @@ export default class AuthController extends Controller {
 							_id: result.user._id,
 							email: result.user.email,
 							name: result.user.name,
-							spends: result.user.spends,
+							operations: result.user.operations,
 							balance: result.user.balance,
 						},
 					})

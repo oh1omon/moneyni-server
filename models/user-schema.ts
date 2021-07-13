@@ -41,7 +41,7 @@ export const UserSchema: Schema = new Schema({
 			max: [300_000, 'Your balance should not be longer then 20 symbols'],
 		},
 	},
-	spends: [Types.ObjectId],
+	operations: [Types.ObjectId],
 	months: [
 		{
 			month: { type: Number, min: 0, max: 11, required: true },

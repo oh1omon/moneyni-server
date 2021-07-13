@@ -5,7 +5,7 @@ export const monthSchema: Schema = new Schema({
 	_id: Types.ObjectId,
 	owner: { type: Types.ObjectId, required: true },
 	month: { type: Number, required: true },
-	spends: { type: [Types.ObjectId], required: true },
+	operations: { type: [Types.ObjectId], required: true },
 	balance: {
 		current: {
 			type: Number,

@@ -6,7 +6,7 @@ import session from 'express-session'
 import schedule from 'node-schedule'
 import passport from 'passport'
 import AuthController from './controllers/auth-controller'
-import SpendsController from './controllers/spends-controller'
+import OperationsController from './controllers/operations-controller'
 import UserController from './controllers/user-controller'
 import DbService from './services/db-service'
 import MonthlyNullify from './services/monthly-nullify'
@@ -43,7 +43,7 @@ const globalMiddleware = [
 	passport.session(),
 ]
 
-const controllers = [new AuthController(), new SpendsController(), new UserController()]
+const controllers = [new AuthController(), new OperationsController(), new UserController()]
 
 try {
 	server.loadMiddleware(globalMiddleware)

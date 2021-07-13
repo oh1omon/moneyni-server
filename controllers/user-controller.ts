@@ -40,9 +40,9 @@ export default class UserController extends Controller {
 			return
 		}
 
-		const { name, password, spends, balance } = req.body
+		const { name, password, operations, balance } = req.body
 
-		const userService = new UserService({ id: req.user?.id, name, password, spends, balance })
+		const userService = new UserService({ id: req.user?.id, name, password, operations, balance })
 
 		const result = await userService.updateUser()
 

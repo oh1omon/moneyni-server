@@ -10,12 +10,12 @@ export default class UserService {
 		name: null,
 		email: null,
 		password: null,
-		spends: null,
+		operations: null,
 		balance: null,
 	}
 
-	constructor({ id, name, email, password, spends, balance }: IUserUC) {
-		this.user = { id, name, email, password, spends, balance }
+	constructor({ id, name, email, password, operations, balance }: IUserUC) {
+		this.user = { id, name, email, password, operations, balance }
 	}
 
 	/**
@@ -78,7 +78,7 @@ export default class UserService {
 				password: hashedPassword,
 				name: this.user.name,
 				balance: { current: 0, spent: 0, income: 0 },
-				spends: [],
+				operations: [],
 				months: [],
 			})
 
@@ -94,7 +94,7 @@ export default class UserService {
 	}
 
 	/**
-	 * This method is used for adding spends or just updating the user
+	 * This method is used for adding operations or just updating the user
 	 * @returns
 	 */
 	public async updateUser(): Promise<IServiceUser> {
@@ -153,16 +153,15 @@ export default class UserService {
 	 */
 	private static async updateDataPrep(user: IUserDocument, uncheckedData: IUserUC): Promise<IUserDocument> {
 		for (const k in uncheckedData) {
-			//this part is working with spends property
-			if (uncheckedData['spends'] && k === 'spends') {
-				user.spends = [...user.spends, uncheckedData[k]]
+			//this part is working with operations property
+			if (uncheckedData['operations'] && k === 'operations') {
+				user.operations = [...user.operations, uncheckedData[k]]
 				continue
 			}
 
 			//This function crypting password
 			if (uncheckedData['password'] && k === 'password') {
-				const password = await bcrypt.hash(uncheckedData[k], 10)
-				user.password = password
+				user.password = await bcrypt.hash(uncheckedData[k], 10)
 				continue
 			}
 
