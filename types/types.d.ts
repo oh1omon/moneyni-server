@@ -21,9 +21,10 @@ interface IUser {
 	email: string
 	password: string
 	name: string
-	salary: {
-		monthly: number
-		actual: number
+	balance: {
+		current: number
+		spent: number
+		income: number
 	}
 	spends: [] | Types.ObjectId[]
 	months: { month: number; id: Types.ObjectId }[]
@@ -50,9 +51,10 @@ interface IMonth {
 	owner: Types.ObjectId
 	month: number
 	spends: Types.ObjectId[]
-	salary: {
-		monthly: number
-		actual: number
+	balance: {
+		current: number
+		spent: number
+		income: number
 	}
 }
 
@@ -75,7 +77,11 @@ interface IUserUC {
 	password?: string | null
 	email?: string | null
 	spends?: Types.ObjectId | null
-	salary?: { monthly?: number; actual?: number }
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
 }
 
 interface ISpendSC {
@@ -92,7 +98,11 @@ interface IMonthSC {
 	owner?: Types.ObjectId | undefined
 	month?: number | undefined
 	spends?: Types.ObjectId[] | null
-	salary?: { monthly?: number; actual?: number }
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
 }
 
 type TGetSpend = Promise<

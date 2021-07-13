@@ -9,7 +9,6 @@ export const spendSchema: Schema = new Schema({
 		required: [true, 'Category is needed'],
 		enum: {
 			values: [
-				'Daily Needs',
 				'Bad Habits',
 				'Hygiene and Health',
 				'Housing',
