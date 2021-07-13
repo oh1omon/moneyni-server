@@ -11,10 +11,11 @@ export default class UserService {
 		email: null,
 		password: null,
 		spends: null,
+		balance: null,
 	}
 
-	constructor({ id, name, email, password, spends }: IUserUC) {
-		this.user = { id, name, email, password, spends }
+	constructor({ id, name, email, password, spends, balance }: IUserUC) {
+		this.user = { id, name, email, password, spends, balance }
 	}
 
 	/**

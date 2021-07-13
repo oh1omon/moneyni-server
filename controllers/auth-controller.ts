@@ -67,7 +67,7 @@ export default class AuthController extends Controller {
 						email: user.email,
 						name: user.name,
 						spends: user.spends,
-						salary: user.salary,
+						balance: user.balance,
 					},
 				})
 				return

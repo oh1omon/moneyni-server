@@ -56,14 +56,21 @@ export default class SpendsController extends Controller {
 				// If user does not have any spends in the month then we will return unsuccessful response
 				if (!response.months[0]) {
 					res.json({
-						status: { success: false, message: 'Error in finding spends: You have no spends in this month' },
+						status: {
+							success: false,
+							message: 'Error in finding spends: You have no spends in this month',
+						},
 					})
 					return
 				}
 				// If spends were successfully fetched from the month user has provided, then we will change assign those spends to idArr
 				idArr = response.months[0].spends
 
-				monthData = { month: response.months[0].month, salary: response.months[0].salary, spends: response.months[0].spends }
+				monthData = {
+					month: response.months[0].month,
+					balance: response.months[0].balance,
+					spends: response.months[0].spends,
+				}
 			}
 
 			const spendsService = new SpendService({ idArr, owner: req.user?._id })
@@ -75,7 +82,10 @@ export default class SpendsController extends Controller {
 			console.log(e)
 
 			res.json({
-				status: { success: false, message: 'Error in internal processes: Internal error, try later please' },
+				status: {
+					success: false,
+					message: 'Error in internal processes: Internal error, try later please',
+				},
 			})
 		}
 	}
@@ -100,7 +110,10 @@ export default class SpendsController extends Controller {
 			console.log(e)
 
 			res.json({
-				status: { success: false, message: 'Error in internal processes: Internal error, try later please' },
+				status: {
+					success: false,
+					message: 'Error in internal processes: Internal error, try later please',
+				},
 			})
 		}
 	}
