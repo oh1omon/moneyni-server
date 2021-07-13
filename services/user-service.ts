@@ -11,11 +11,10 @@ export default class UserService {
 		email: null,
 		password: null,
 		spends: null,
-		salary: null,
 	}
 
-	constructor({ id, name, email, password, spends, salary }: IUserUC) {
-		this.user = { id, name, email, password, spends, salary }
+	constructor({ id, name, email, password, spends }: IUserUC) {
+		this.user = { id, name, email, password, spends }
 	}
 
 	/**
@@ -23,8 +22,7 @@ export default class UserService {
 	 */
 	public async findUserById(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findById(this.user.id)
-			return doc
+			return await User.findById(this.user.id)
 		} catch (e) {
 			console.log(e)
 			return null
@@ -36,8 +34,7 @@ export default class UserService {
 	 */
 	public async findUserByEmail(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findOne({ email: this.user.email })
-			return doc
+			return await User.findOne({ email: this.user.email })
 		} catch (e) {
 			console.log(e)
 			return null
@@ -79,12 +76,15 @@ export default class UserService {
 				email: this.user.email,
 				password: hashedPassword,
 				name: this.user.name,
-				salary: { monthly: this.user.salary, actual: this.user.salary },
+				balance: { current: 0, spent: 0, income: 0 },
 				spends: [],
 				months: [],
 			})
 
-			return { status: { success: true, message: 'You have been successfully sign up ' }, user: injectedUser }
+			return {
+				status: { success: true, message: 'You have been successfully sign up ' },
+				user: injectedUser,
+			}
 		} catch (e) {
 			console.log(e)
 
@@ -111,16 +111,23 @@ export default class UserService {
 			const foundUser = await User.findById(this.user.id)
 
 			//Checking if user has been found
-			if (!foundUser) return { status: { success: false, message: 'Error in field user: No user found to update' } }
+			if (!foundUser)
+				return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
 			//Waiting for user document to be updated, but unsaved
-			const updatedUserDoc = await UserService.updateDataPrep(foundUser, this.user as { [key: string]: unknown })
+			const updatedUserDoc = await UserService.updateDataPrep(
+				foundUser,
+				this.user as { [key: string]: unknown }
+			)
 
 			//Finally, saving user to the db
 			const result = await updatedUserDoc.save()
 
 			//Checking if there is any problems saving user
-			if (!result) return { status: { success: false, message: 'Error in internal processes: Problem updating user' } }
+			if (!result)
+				return {
+					status: { success: false, message: 'Error in internal processes: Problem updating user' },
+				}
 
 			//Nulling the password field
 			result.password = undefined
@@ -159,8 +166,8 @@ export default class UserService {
 			}
 
 			//This function is to convert salary field into salary object
-			if (uncheckedData['salary'] && k === 'salary') {
-				Object.assign(user.salary, uncheckedData[k])
+			if (uncheckedData['balance'] && k === 'balance') {
+				Object.assign(user.balance, uncheckedData[k])
 
 				continue
 			}

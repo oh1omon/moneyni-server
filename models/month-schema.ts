@@ -6,16 +6,21 @@ export const monthSchema: Schema = new Schema({
 	owner: { type: Types.ObjectId, required: true },
 	month: { type: Number, required: true },
 	spends: { type: [Types.ObjectId], required: true },
-	salary: {
-		monthly: {
+	balance: {
+		current: {
 			type: Number,
 			required: true,
-			min: 2,
 			max: 300_000,
 		},
-		actual: {
+		spent: {
 			type: Number,
 			required: true,
+			max: 300_000,
+		},
+		income: {
+			type: Number,
+			required: true,
+			max: 300_000,
 		},
 	},
 })

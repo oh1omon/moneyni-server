@@ -45,7 +45,9 @@ export default class AuthController extends Controller {
 				return
 			}
 			if (!user) {
-				res.json({ status: { success: false, message: 'Error in field somewhere: Wrong email or password' } })
+				res.json({
+					status: { success: false, message: 'Error in field somewhere: Wrong email or password' },
+				})
 				return
 			}
 			req.login(user, (err) => {
@@ -92,7 +94,8 @@ export default class AuthController extends Controller {
 						res.json({
 							status: {
 								success: false,
-								message: 'Error in field nowhere: Problem with signing you in after signing you up',
+								message:
+									'Error in field nowhere: Problem with signing you in after signing you up',
 							},
 						})
 						return
@@ -104,7 +107,7 @@ export default class AuthController extends Controller {
 							email: result.user.email,
 							name: result.user.name,
 							spends: result.user.spends,
-							salary: result.user.salary,
+							balance: result.user.balance,
 						},
 					})
 					return
@@ -113,7 +116,10 @@ export default class AuthController extends Controller {
 		} catch (e) {
 			console.log(e)
 			res.json({
-				status: { success: false, message: 'Error in internal processes: Internal error, try later please' },
+				status: {
+					success: false,
+					message: 'Error in internal processes: Internal error, try later please',
+				},
 			})
 		}
 	}

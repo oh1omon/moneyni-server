@@ -28,19 +28,16 @@ export const UserSchema: Schema = new Schema({
 		current: {
 			type: Number,
 			required: [true, 'Your current balance is required'],
-			min: [2, 'Your balance should not be shorter then 2 symbols'],
 			max: [300_000, 'Your balance should not be longer then 20 symbols'],
 		},
 		spent: {
 			type: Number,
 			required: [true, 'Your current balance is required'],
-			min: [2, 'Your balance should not be shorter then 2 symbols'],
 			max: [300_000, 'Your balance should not be longer then 20 symbols'],
 		},
 		income: {
 			type: Number,
 			required: [true, 'Your current balance is required'],
-			min: [2, 'Your balance should not be shorter then 2 symbols'],
 			max: [300_000, 'Your balance should not be longer then 20 symbols'],
 		},
 	},
