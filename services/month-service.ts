@@ -6,14 +6,14 @@ export default class MonthService {
 	public readonly idArr: Types.ObjectId[]
 	public readonly owner: Types.ObjectId
 	public readonly month: number
-	public readonly salary: { monthly?: number; actual?: number }
+	public readonly balance: { current?: number; spent?: number; income?: number }
 	public readonly spends: Types.ObjectId[] | null
 
-	constructor({ idArr, owner, month, salary, spends }: IMonthSC) {
+	constructor({ idArr, owner, month, balance, spends }: IMonthSC) {
 		this.idArr = idArr
 		this.owner = owner
 		this.month = month
-		this.salary = salary
+		this.balance = balance
 		this.spends = spends
 	}
 
@@ -89,7 +89,7 @@ export default class MonthService {
 				//Since we are running new month creation process after 00:00 so we wil need last month, that is why we are not adding +1 to the value returned from getMonth method
 				month: new Date().getMonth(),
 				spends: this.spends,
-				salary: this.salary,
+				balance: this.balance,
 			})
 
 			// Then we are returning object with status object and month array

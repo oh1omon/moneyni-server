@@ -24,7 +24,7 @@ export const initializePassport = (passport: PassportStatic): void => {
 		}
 	}
 	passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
-	passport.serializeUser((user: IUser, done: any) => {
+	passport.serializeUser((user: IUser, done) => {
 		done(null, user.id)
 	})
 	passport.deserializeUser(async (id: string, done: any) => {

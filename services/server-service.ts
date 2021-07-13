@@ -7,7 +7,7 @@ import { TJobs } from '../types/types'
 export default class Server {
 	private app: Application
 	private readonly port: number
-	private schedule: typeof scheduleJob
+	private readonly schedule: typeof scheduleJob
 
 	constructor(app: Application, port: number, schedule: typeof scheduleJob) {
 		this.app = app
