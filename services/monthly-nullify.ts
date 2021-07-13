@@ -32,7 +32,7 @@ export default class MonthlyNullify extends ScheduleWorker {
 				// In case of success we will nullify spends array, actual salary and then add month record to users document
 				if (response.status.success) {
 					u.operations = []
-					u.balance = { current: 0, income: 0, spent: 0 }
+					u.balance = { current: u.balance.current, income: 0, spent: 0 }
 					u.months.push({ month: new Date().getMonth(), id: response.month._id })
 
 					u.save((err) => {

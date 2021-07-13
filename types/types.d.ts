@@ -135,3 +135,14 @@ type TJobs = {
 	interval: string
 	cb: () => void
 }[]
+
+interface ICheckedUserUpdate {
+	$push?: { operations: Types.ObjectId }
+	password?: string
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
+	name?: string
+}

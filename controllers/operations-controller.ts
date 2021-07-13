@@ -36,7 +36,7 @@ export default class OperationsController extends Controller {
 			// Getting month in case of user wants to fetch his operations for some old month
 			const { month } = req.body
 
-			// Declaring monthData and idArr from req.body
+			// Declaring monthDasta and idArr from req.body
 			let monthData,
 				{ idArr } = req.body
 

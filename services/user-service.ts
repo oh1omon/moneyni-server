@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import { User } from '../models/user-schema'
-import { IServiceUser, IUserDocument, IUserUC } from '../types/types'
+import { ICheckedUserUpdate, IServiceUser, IUserDocument, IUserUC } from '../types/types'
 
 export default class UserService {
 	//User property interface
@@ -108,27 +108,18 @@ export default class UserService {
 					},
 				}
 
-			//Finding user
-			const foundUser = await User.findById(this.user.id)
-
-			//Checking if user has been found
-			if (!foundUser)
-				return { status: { success: false, message: 'Error in field user: No user found to update' } }
-
 			//Waiting for user document to be updated, but unsaved
-			const updatedUserDoc = await UserService.updateDataPrep(
-				foundUser,
-				this.user as { [key: string]: unknown }
+			const result = await User.findByIdAndUpdate(
+				this.user.id,
+				await UserService.updateDataPrep(this.user as { [key: string]: unknown }),
+				{
+					new: true,
+				}
 			)
-
-			//Finally, saving user to the db
-			const result = await updatedUserDoc.save()
 
 			//Checking if there is any problems saving user
 			if (!result)
-				return {
-					status: { success: false, message: 'Error in internal processes: Problem updating user' },
-				}
+				return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
 			//Nulling the password field
 			result.password = undefined
@@ -147,36 +138,32 @@ export default class UserService {
 
 	/**
 	 * This method is combining user document with updates
-	 * @param user
 	 * @param uncheckedData
 	 * @returns {IUserDocument} updates, but unsaved user document
 	 */
-	private static async updateDataPrep(user: IUserDocument, uncheckedData: IUserUC): Promise<IUserDocument> {
-		for (const k in uncheckedData) {
-			//this part is working with operations property
-			if (uncheckedData['operations'] && k === 'operations') {
-				user.operations = [...user.operations, uncheckedData[k]]
-				continue
-			}
+	private static async updateDataPrep(uncheckedData: IUserUC): Promise<ICheckedUserUpdate> {
+		const checked: ICheckedUserUpdate = {}
 
-			//This function crypting password
-			if (uncheckedData['password'] && k === 'password') {
-				user.password = await bcrypt.hash(uncheckedData[k], 10)
-				continue
-			}
-
-			//This function is to convert salary field into salary object
-			if (uncheckedData['balance'] && k === 'balance') {
-				Object.assign(user.balance, uncheckedData[k])
-
-				continue
-			}
-
-			if (uncheckedData['name'] && k === 'name') {
-				user.name = uncheckedData[k] as string
-			}
+		//this part is working with operations property
+		if (uncheckedData.operations) {
+			checked.$push = { operations: uncheckedData.operations }
 		}
 
-		return user
+		//This function crypting password
+		if (uncheckedData.password) {
+			checked.password = await bcrypt.hash(uncheckedData.password, 10)
+		}
+
+		//This function is to convert salary field into salary object
+		if (uncheckedData.balance) {
+			checked.balance = uncheckedData.balance
+		}
+
+		//This function is to convert salary field into salary object
+		if (uncheckedData.name) {
+			checked.name = uncheckedData.name
+		}
+
+		return checked
 	}
 }

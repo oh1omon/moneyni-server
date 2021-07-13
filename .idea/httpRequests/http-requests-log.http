@@ -1,3 +1,27 @@
+POST http://localhost:8080/api/operations/
+Content-Type: application/json
+
+{
+  "operations": []
+}
+
+<> 2021-07-13T160000.200.json
+
+###
+
+POST http://localhost:8080/api/operations/add
+Content-Type: application/json
+
+{
+	"category":"Housing",
+	"cost":"789",
+	"currency":"$"
+}
+
+<> 2021-07-13T154643.200.json
+
+###
+
 POST http://localhost:8080/api/spends/add
 Content-Type: application/json
 
