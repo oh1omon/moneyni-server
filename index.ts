@@ -3,21 +3,23 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express, { Application } from 'express'
 import session from 'express-session'
+import schedule from 'node-schedule'
 import passport from 'passport'
 import AuthController from './controllers/auth-controller'
-import SpendsController from './controllers/spends-controller'
+import OperationsController from './controllers/operations-controller'
 import UserController from './controllers/user-controller'
 import DbService from './services/db-service'
+import MonthlyNullify from './services/monthly-nullify'
 import Server from './services/server-service'
 dotenv.config()
 
 const app: Application = express()
 
-// //Extracting PORT & HOST variables from .env file
+//Extracting PORT & HOST variables from .env file
 const PORT: number = parseInt(process.env.PORT as string, 10)
 
 //Initializing Server class and passing there app instance and port number
-const server = new Server(app, PORT)
+const server = new Server(app, PORT, schedule.scheduleJob)
 
 //Initializing DbService class by passing db connection uri to it
 const db = new DbService(process.env.DB_CONNECT_LINK)
@@ -41,11 +43,19 @@ const globalMiddleware = [
 	passport.session(),
 ]
 
-const controllers = [new AuthController(), new SpendsController(), new UserController()]
+const controllers = [new AuthController(), new OperationsController(), new UserController()]
 
-Promise.resolve().then(() => {
+try {
 	server.loadMiddleware(globalMiddleware)
 	db.connect()
 	server.loadControllers(controllers)
+	server.loadJobs([
+		{
+			interval: MonthlyNullify.interval,
+			cb: MonthlyNullify.callback,
+		},
+	])
 	server.run()
-})
+} catch (e) {
+	console.log(e)
+}

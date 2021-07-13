@@ -24,7 +24,30 @@ export const UserSchema: Schema = new Schema({
 		minLength: [2, 'Your name should not be shorter then 2 symbols'],
 		maxLength: [20, 'Your name should not be longer then 20 symbols'],
 	},
-	spends: [Types.ObjectId],
+	balance: {
+		current: {
+			type: Number,
+			required: [true, 'Your current balance is required'],
+			max: [300_000, 'Your balance should not be longer then 20 symbols'],
+		},
+		spent: {
+			type: Number,
+			required: [true, 'Your current balance is required'],
+			max: [300_000, 'Your balance should not be longer then 20 symbols'],
+		},
+		income: {
+			type: Number,
+			required: [true, 'Your current balance is required'],
+			max: [300_000, 'Your balance should not be longer then 20 symbols'],
+		},
+	},
+	operations: [Types.ObjectId],
+	months: [
+		{
+			month: { type: Number, min: 0, max: 11, required: true },
+			id: { type: Types.ObjectId, required: true },
+		},
+	],
 })
 
 export const User: Model<IUserDocument> = model<IUserDocument>('User', UserSchema)

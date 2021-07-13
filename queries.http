@@ -1,10 +1,11 @@
-POST http://localhost:8080/auth/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
-	"email":"test@test1.com", 
+	"email":"test@test.com", 
 	"password": "12345678",
-	"name":"test"
+	"name":"test",
+	"salary":"3000"
 }
 
 ###
@@ -13,23 +14,25 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-	"email":"test@test.com", 
-	"password": "123456789"
+	"email":"test@test.com",
+	"password": "12345678"
 }
 
 ###
 
-POST http://localhost:8080/user/update
+POST http://localhost:8080/api/user/update
 Content-Type: application/json
 
 {
 	"name":"testeri2",
-	"password":"123456789"
+	"password":"123456789",
+	"salary":"Fdg",
+	"spends":"60d1a46194f6fb59ff67fd8a"
 }
 
 ###
 
-GET http://localhost:8080/user/retrieve
+GET http://localhost:8080/api/user/retrieve
 Content-Type: application/json
 
 ###
@@ -39,16 +42,16 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/api/spends/
+POST http://localhost:8080/api/operations/
 Content-Type: application/json
 
 {
-	"idArr":["60d0959ece4366412f240bf7"]
+  "operations": []
 }
 
 ###
 
-POST http://localhost:8080/spends/add
+POST http://localhost:8080/api/operations/add
 Content-Type: application/json
 
 {

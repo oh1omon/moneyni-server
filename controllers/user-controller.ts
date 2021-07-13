@@ -32,17 +32,17 @@ export default class UserController extends Controller {
 	 */
 	async handleUpdate(req: Request, res: Response): Promise<void> {
 		if (!req.body) {
-			res.json({ message: 'you need to submit something' })
+			res.json({ success: false, message: 'Error in field everywhere: You need to submit something' })
 		}
 
 		if (!req.user) {
-			res.json({ message: 'you need to be logged in to proceed' })
+			res.json({ success: false, message: 'Error in field user: You need to be logged in to proceed' })
 			return
 		}
 
-		const { name, password, spends } = req.body
+		const { name, password, operations, balance } = req.body
 
-		const userService = new UserService({ id: req.user?.id, name, password, spends })
+		const userService = new UserService({ id: req.user?.id, name, password, operations, balance })
 
 		const result = await userService.updateUser()
 
@@ -56,6 +56,10 @@ export default class UserController extends Controller {
 	 * @returns {void}
 	 */
 	handleRetrieve(req: Request, res: Response): void {
-		res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
+		if (req.user) {
+			res.json({ status: { success: true, message: 'You are authenticated' }, user: req.user })
+			return
+		}
+		res.json({ status: { success: false, message: 'Error in field user: You are not authenticated' } })
 	}
 }

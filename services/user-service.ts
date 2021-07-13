@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import { User } from '../models/user-schema'
-import { IServiceUser, IUserDocument, IUserUC } from '../types/types'
+import { ICheckedUserUpdate, IServiceUser, IUserDocument, IUserUC } from '../types/types'
 
 export default class UserService {
 	//User property interface
@@ -10,21 +10,20 @@ export default class UserService {
 		name: null,
 		email: null,
 		password: null,
-		spends: null,
+		operations: null,
+		balance: null,
 	}
 
-	constructor({ id, name, email, password, spends }: IUserUC) {
-		this.user = { id, name, email, password, spends }
+	constructor({ id, name, email, password, operations, balance }: IUserUC) {
+		this.user = { id, name, email, password, operations, balance }
 	}
 
 	/**
 	 * Method performs searching database with id passed into function, and returns found doc, or empty object
-	 * @param id string
 	 */
 	public async findUserById(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findById(this.user.id)
-			return doc
+			return await User.findById(this.user.id)
 		} catch (e) {
 			console.log(e)
 			return null
@@ -33,12 +32,10 @@ export default class UserService {
 
 	/**
 	 * Method performs searching database with email passed into function, and returns found doc, or empty object
-	 * @param email string
 	 */
 	public async findUserByEmail(): Promise<IUserDocument | null> {
 		try {
-			const doc = await User.findOne({ email: this.user.email })
-			return doc
+			return await User.findOne({ email: this.user.email })
 		} catch (e) {
 			console.log(e)
 			return null
@@ -47,19 +44,29 @@ export default class UserService {
 
 	/**
 	 * Method check if user already registered or not and then creates, or not creates a new user
-	 * @returns {Promise<ICreateNewUser>}
+	 * @returns {Promise<IServiceUser>}
 	 */
 	public async createNewUser(): Promise<IServiceUser> {
 		try {
 			//Checking if user already exists in DB
 			const foundUser = await this.findUserByEmail()
 			if (foundUser) {
-				return { status: { success: false, message: 'there is an account with this email already' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field email: There is an account with this email already',
+					},
+				}
 			}
 
 			//Checking password length
 			if (this.user.password.length < 8)
-				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field password: Password should be at least 8 symbols',
+					},
+				}
 
 			//Hashing password
 			const hashedPassword: string = await bcrypt.hash(this.user.password, 10)
@@ -70,10 +77,15 @@ export default class UserService {
 				email: this.user.email,
 				password: hashedPassword,
 				name: this.user.name,
-				spends: [],
+				balance: { current: 0, spent: 0, income: 0 },
+				operations: [],
+				months: [],
 			})
 
-			return { status: { success: true, message: 'You have been successfully sign up ' }, user: injectedUser }
+			return {
+				status: { success: true, message: 'You have been successfully sign up ' },
+				user: injectedUser,
+			}
 		} catch (e) {
 			console.log(e)
 
@@ -82,32 +94,40 @@ export default class UserService {
 	}
 
 	/**
-	 * This method is used for adding spends or just updating the user
-	 * @param userId
-	 * @param updates
+	 * This method is used for adding operations or just updating the user
 	 * @returns
 	 */
 	public async updateUser(): Promise<IServiceUser> {
 		try {
 			//Checking password length
 			if (this.user.password && this.user.password.length < 8)
-				return { status: { success: false, message: 'password should be at least 8 symbols' } }
+				return {
+					status: {
+						success: false,
+						message: 'Error in field password: Password should be at least 8 symbols',
+					},
+				}
 
-			const updatedUser = await User.findByIdAndUpdate(
+			//Waiting for user document to be updated, but unsaved
+			const result = await User.findByIdAndUpdate(
 				this.user.id,
-				await this.updateDataPrep(this.user as { [key: string]: unknown }),
+				await UserService.updateDataPrep(this.user as { [key: string]: unknown }),
 				{
 					new: true,
 				}
 			)
 
-			if (!updatedUser) return { status: { success: false, message: 'No user found to update' } }
+			//Checking if there is any problems saving user
+			if (!result)
+				return { status: { success: false, message: 'Error in field user: No user found to update' } }
 
-			updatedUser.password = undefined
+			//Nulling the password field
+			result.password = undefined
 
+			//Returning status and user objects
 			return {
 				status: { success: true, message: 'You have successfully updated your profile! ' },
-				user: updatedUser,
+				user: result,
 			}
 		} catch (e) {
 			console.log(e)
@@ -117,33 +137,33 @@ export default class UserService {
 	}
 
 	/**
-	 * This method is going to prepare data for update method
-	 * It will delete null-ish fields and will transform spends field to $push field
+	 * This method is combining user document with updates
 	 * @param uncheckedData
-	 * @returns {object} with checked data
+	 * @returns {IUserDocument} updates, but unsaved user document
 	 */
-	private async updateDataPrep(uncheckedData: Record<string, unknown>) {
-		const acc: Record<string, unknown> = {}
-		for (const k in uncheckedData) {
-			//this part is working with spends property
-			if (uncheckedData['spends'] && k === 'spends') {
-				acc.$push = { spends: uncheckedData[k] }
-				continue
-			}
+	private static async updateDataPrep(uncheckedData: IUserUC): Promise<ICheckedUserUpdate> {
+		const checked: ICheckedUserUpdate = {}
 
-			//This function crypting password
-			if (uncheckedData['password'] && k === 'password') {
-				const password = await bcrypt.hash(uncheckedData[k], 10)
-				acc[k] = password
-				continue
-			}
-
-			//All other properties will be added, excluding id
-			if (uncheckedData[k] && k !== 'id') {
-				acc[k] = uncheckedData[k]
-			}
+		//this part is working with operations property
+		if (uncheckedData.operations) {
+			checked.$push = { operations: uncheckedData.operations }
 		}
 
-		return acc
+		//This function crypting password
+		if (uncheckedData.password) {
+			checked.password = await bcrypt.hash(uncheckedData.password, 10)
+		}
+
+		//This function is to convert salary field into salary object
+		if (uncheckedData.balance) {
+			checked.balance = uncheckedData.balance
+		}
+
+		//This function is to convert salary field into salary object
+		if (uncheckedData.name) {
+			checked.name = uncheckedData.name
+		}
+
+		return checked
 	}
 }

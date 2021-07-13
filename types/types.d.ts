@@ -21,20 +21,19 @@ interface IUser {
 	email: string
 	password: string
 	name: string
-	spends: [] | Types.ObjectId[]
+	balance: {
+		current: number
+		spent: number
+		income: number
+	}
+	operations: [] | Types.ObjectId[]
+	months: { month: number; id: Types.ObjectId }[]
 }
 
 type IUserDocument = IUser & Document
 
-//Interface for data coming from client side
-interface IUserInput {
-	email?: IUser['email']
-	password?: IUser['password']
-	name?: IUser['name']
-}
-
 //Interfaces for Spends
-interface ISpend {
+interface IOperation {
 	_id: Types.ObjectId
 	owner: Types.ObjectId
 	category: string
@@ -43,15 +42,23 @@ interface ISpend {
 	currency: string
 }
 
-type ISpendDocument = ISpend & Document
+type IOperationDocument = IOperation & Document
 
-//Interface for data coming from client side
-interface ISpendInput {
-	category: ISpend['category']
-	comment?: ISpend['comment']
-	cost: ISpend['cost']
-	currency: ISpend['currency']
+// Interface for Month schema
+
+interface IMonth {
+	_id: Types.ObjectId
+	owner: Types.ObjectId
+	month: number
+	operations: Types.ObjectId[]
+	balance: {
+		current: number
+		spent: number
+		income: number
+	}
 }
+
+type IMonthDocument = IMonth & Document
 
 interface IMessage {
 	success: boolean
@@ -62,68 +69,22 @@ interface IServiceUser {
 	user?: IUserDocument
 }
 
-type TGetUserByEmail = (email: string) => Promise<IUserDocument | Record<string, never>>
-
-type TGetUserById = (id: string) => Promise<IUserDocument | Record<string, never>>
-
-type TCreateNewUser = (newUser: IUserInput) => Promise<IUserDocument>
-
-type TGetSpendsById = (idArr: Types.ObjectId[] | []) => Promise<ISpendDocument | ISpendDocument[] | string>
-
-type TAddNewSpend = (newSpend: ISpendInput) => Promise<ISpendDocument | string>
-
-type TAddNewSpendToUser = (userId: Types.ObjectId, newSpend: Types.ObjectId) => Promise<IUserDocument | string>
-
-type IAddSpendToUserValidator = (newSpend: IAddSpendToUserValProps) => boolean
-
-interface IAddSpendToUserValProps {
-	userId: Types.ObjectId
-	newSpendId: Types.ObjectId
-}
-
-type IAddSpendValidator = (newSpend: IAddSpendValProps) => boolean
-
-interface IAddSpendValProps {
-	category?: string
-	comment?: string
-	cost?: number
-	currency?: string
-}
-
-type IGetSpendsValidator = (newSpend: IGetSpendsValProps) => boolean
-
-type IGetSpendsValProps = Types.ObjectId[]
-
-type ISignInValidator = (signInData: ISignInValProps) => boolean
-
-interface ISignInValProps {
-	email?: string
-	password?: string
-}
-
-type ISignUpValidator = (signUpData: ISignUpValProps) => boolean
-
-interface ISignUpValProps extends ISignInValProps {
-	name?: string
-}
-
 //UserService
-
-interface IUpdates {
-	password?: string
-	name?: string
-	spends?: Types.ObjectId
-}
 
 interface IUserUC {
 	name?: string | null
 	id?: string | null
 	password?: string | null
 	email?: string | null
-	spends?: Types.ObjectId | null
+	operations?: Types.ObjectId | null
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
 }
 
-interface ISpendSC {
+interface IOperationSC {
 	category?: string | undefined
 	currency?: string | undefined
 	cost?: number | undefined
@@ -132,15 +93,56 @@ interface ISpendSC {
 	owner?: Types.ObjectId | undefined
 }
 
-type TGetSpend = Promise<
+interface IMonthSC {
+	idArr?: Types.ObjectId[] | undefined
+	owner?: Types.ObjectId | undefined
+	month?: number | undefined
+	operations?: Types.ObjectId[] | null
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
+}
+
+type TGetOperation = Promise<
 	| {
 			status: { success: boolean; message: string }
-			spends: ISpendDocument[]
+			operations: IOperationDocument[]
 	  }
-	| { status: { success: boolean; message: string }; spends?: undefined }
+	| { status: { success: boolean; message: string }; operations?: undefined }
 >
 
-type TAddSpend = Promise<
-	| { status: { success: boolean; message: string }; spends: ISpendDocument }
-	| { status: { success: boolean; message: string }; spends?: undefined }
+type TGetMonth = Promise<
+	| {
+			status: { success: boolean; message: string }
+			months: IMonthDocument[]
+	  }
+	| { status: { success: boolean; message: string }; months?: undefined }
 >
+
+type TAddOperation = Promise<
+	| { status: { success: boolean; message: string }; operation: IOperationDocument }
+	| { status: { success: boolean; message: string }; operation?: undefined }
+>
+
+type TAddMonth = Promise<
+	| { status: { success: boolean; message: string }; month: IMonthDocument }
+	| { status: { success: boolean; message: string }; month?: undefined }
+>
+
+type TJobs = {
+	interval: string
+	cb: () => void
+}[]
+
+interface ICheckedUserUpdate {
+	$push?: { operations: Types.ObjectId }
+	password?: string
+	balance?: {
+		current: number
+		spent: number
+		income: number
+	}
+	name?: string
+}

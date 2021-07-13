@@ -8,11 +8,10 @@ import { IRoute, Request } from '../types/types'
 export default class AuthController extends Controller {
 	constructor() {
 		super()
+		initializePassport(passport)
 	}
 
 	path = '/auth'
-
-	passport = initializePassport(passport)
 
 	routes: IRoute[] = [
 		{
@@ -46,12 +45,19 @@ export default class AuthController extends Controller {
 				return
 			}
 			if (!user) {
-				res.json({ status: { success: false, message: 'Wrong email or password' } })
+				res.json({
+					status: { success: false, message: 'Error in field somewhere: Wrong email or password' },
+				})
 				return
 			}
 			req.login(user, (err) => {
 				if (err) {
-					res.json({ status: { success: false, message: 'Internal error, try later please' } })
+					res.json({
+						status: {
+							success: false,
+							message: 'Error in internal processes: Internal error, try later please',
+						},
+					})
 					return
 				}
 				res.json({
@@ -60,7 +66,8 @@ export default class AuthController extends Controller {
 						_id: user._id,
 						email: user.email,
 						name: user.name,
-						spends: user.spends,
+						operations: user.operations,
+						balance: user.balance,
 					},
 				})
 				return
@@ -85,7 +92,11 @@ export default class AuthController extends Controller {
 				req.login(result.user, (err) => {
 					if (err) {
 						res.json({
-							status: { success: false, message: 'Problem in signing you in after signing you up' },
+							status: {
+								success: false,
+								message:
+									'Error in field nowhere: Problem with signing you in after signing you up',
+							},
 						})
 						return
 					}
@@ -95,7 +106,8 @@ export default class AuthController extends Controller {
 							_id: result.user._id,
 							email: result.user.email,
 							name: result.user.name,
-							spends: result.user.spends,
+							operations: result.user.operations,
+							balance: result.user.balance,
 						},
 					})
 					return
@@ -103,7 +115,12 @@ export default class AuthController extends Controller {
 			} else res.json(result)
 		} catch (e) {
 			console.log(e)
-			res.json({ status: { success: false, message: 'Internal error, try later please' } })
+			res.json({
+				status: {
+					success: false,
+					message: 'Error in internal processes: Internal error, try later please',
+				},
+			})
 		}
 	}
 
@@ -122,7 +139,9 @@ export default class AuthController extends Controller {
 					.json({ status: { success: true, message: 'You have successfully logged out' } })
 			} else {
 				console.log(err)
-				res.json({ status: { success: false, message: 'Problem logging you out' } })
+				res.json({
+					status: { success: false, message: 'Error in internal processes: Problem logging you out' },
+				})
 			}
 		})
 	}
